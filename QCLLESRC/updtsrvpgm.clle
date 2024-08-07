@@ -1,0 +1,15 @@
+             PGM
+             CRTSQLRPGI OBJ(KARTIKCS/MNGRDSBM)   +
+                          SRCFILE(KARTIKCS/QRPGLESRC) SRCMBR(*OBJ) +
+                          OBJTYPE(*MODULE) DBGVIEW(*SOURCE)
+             CRTSQLRPGI OBJ(KARTIKCS/MNGRCRM)   +
+                          SRCFILE(KARTIKCS/QRPGLESRC) SRCMBR(*OBJ) +
+                          OBJTYPE(*MODULE) DBGVIEW(*SOURCE)
+             UPDSRVPGM  SRVPGM(KARTIKCS/LOGINSRV) +
+                          MODULE(KARTIKCS/MNGRDSBM)
+             UPDSRVPGM  SRVPGM(KARTIKCS/MANAGERSRV) +
+                          MODULE(KARTIKCS/MNGRCRM)
+             CRTBNDRPG  PGM(KARTIKCS/LOGINR) +
+                          SRCFILE(KARTIKCS/QRPGLESRC) DFTACTGRP(*NO) +
+                          BNDDIR(KARTIKCS/LOGINBND) DBGVIEW(*SOURCE)
+             ENDPGM

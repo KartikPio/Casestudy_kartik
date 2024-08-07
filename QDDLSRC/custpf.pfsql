@@ -1,0 +1,87 @@
+-- ------------------------------------------------------------------------------- //
+-- Created By..........: Programmers.io @ 2024                                     //
+-- Created Date........: 2024/07/17                                                //
+-- Developer...........: Kartik Parihar                                            //
+-- Description.........: Customer Table                                               //
+-- ------------------------------------------------------------------------------- //
+-- MODIFICATION LOG:                                                               //
+-- ------------------------------------------------------------------------------- //
+-- Date    | Mod_ID  | Developer  | Case and Description                           //
+-- --------|---------|------------|----------------------------------------------- //
+-- 24/07/17|         | Kartik Pa  | File Created                                   //
+-- ------------------------------------------------------------------------------- //
+-- Compilation Instruction                                                         //
+-- ------------------------------------------------------------------------------- //
+-- RUNSQLSTM SRCFILE(KARTIKCS/QDDLSRC) SRCMBR(CustPF) COMMIT(*NONE) DFTRDBCOL(KARTIKCS) //
+-- ------------------------------------------------------------------------------- //
+Create or Replace Table Customer_Table(
+    Cust_Id      For Column CId          Char(10) Not Null,
+    Cust_Name    For Column CName        Char(20) With Default ' ',
+    Cust_Gndr    For Column CGender      Char(6) With Default ' ',
+    Cust_Dob     For Column CDob         Date,
+    Cust_Mob     For Column CMob         Numeric(10) With Default 0,
+    Cust_AltMob  For Column CAltMob      Numeric(10) With Default 0,
+    Cust_Adhar   For Column CAdhar       Numeric(12) With Default 0,
+    Cust_Pan     For Column CPan         Char(10) With Default ' ',
+    Cust_Email   For Column CEmail       Char(100) With Default ' ',
+    Cust_CrntAdr For Column CCrntAdr     Char(50) With Default ' ',
+    Cust_PermAdr For Column CPermAdr     Char(50) With Default ' ',
+    Cust_State   For Column CState       Char(15) With Default ' ',
+    Cust_City    For Column CCity        Char(15) With Default ' ',
+    Cust_Pin     For Column CPin         Numeric(6) With Default 0,
+    Nmnee_Name   For Column NmneeNm      Char(20) With Default ' ',
+    Nmnee_Mob    For Column NmneeMob     Char(10) With Default ' ',
+    Nmnee_Adhar  For Column NmneeAdhar   Numeric(12) With Default 0,
+    AddTmStmt    For Column CAddTmStmt   Timestamp,
+    UpdTmStmt    For Column CUpdTmStmt   Timestamp,
+Primary Key(CId)
+)
+RcdFmt CustPFR;
+
+Rename Table Customer_Table to System Name CustPF;
+
+Label On Table Customer_Table Is 'Customer Pf for Customer Details';
+
+Label on Column Customer_Table(
+    Cust_Id      Is 'Customer Id',
+    Cust_Name    Is 'Customer Name',
+    Cust_Gndr    Is 'Customer Gender',
+    Cust_Dob     Is 'Customer Date of birth',
+    Cust_Mob     Is 'Customer Mobile Number',
+    Cust_AltMob  Is 'Customer Altername Number',
+    Cust_Adhar   Is 'Customer Adhar Number',
+    Cust_Pan     Is 'Customer Pan Number',
+    Cust_Email   Is 'Customer Email Address',
+    Cust_CrntAdr Is 'Customer Current Address',
+    Cust_PermAdr Is 'Customer Permanent Address',
+    Cust_State   Is 'Customer State',
+    Cust_City    Is 'Customer City',
+    Cust_Pin     Is 'Customer Pin Number',
+    Nmnee_Name   Is 'Nominee Name',
+    Nmnee_Mob    Is 'Nominee Mobile Number',
+    Nmnee_Adhar  Is 'Nominee Adhar Number',
+    AddTmStmt    Is 'Customer Add Timestamp',
+    UpdTmStmt    Is 'Customer Update Timestamp'
+);
+
+Label on Column Customer_Table(
+    Cust_Id      Text Is 'Customer Id',
+    Cust_Name    Text Is 'Customer Name',
+    Cust_Gndr    Text Is 'Customer Gender',
+    Cust_Dob     Text Is 'Customer Date of birth',
+    Cust_Mob     Text Is 'Customer Mobile Number',
+    Cust_AltMob  Text Is 'Customer Altername Number',
+    Cust_Adhar   Text Is 'Customer Adhar Number',
+    Cust_Pan     Text Is 'Customer Pan Number',
+    Cust_Email   Text Is 'Customer Email Address',
+    Cust_CrntAdr Text Is 'Customer Current Address',
+    Cust_PermAdr Text Is 'Customer Permanent Address',
+    Cust_State   Text Is 'Customer State',
+    Cust_City    Text Is 'Customer City',
+    Cust_Pin     Text Is 'Customer Pin Number',
+    Nmnee_Name   Text Is 'Nominee Name',
+    Nmnee_Mob    Text Is 'Nominee Mobile Number',
+    Nmnee_Adhar  Text Is 'Nominee Adhar Number',
+    AddTmStmt    Text Is 'Customer Add Timestamp',
+    UpdTmStmt    Text Is 'Customer Update Timestamp'
+);

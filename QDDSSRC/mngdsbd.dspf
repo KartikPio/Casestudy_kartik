@@ -1,0 +1,189 @@
+     A*%%TS  SD  20240806  062747  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%EC
+     A                                      DSPSIZ(24 80 *DS3)
+     A                                      INDARA
+     A          R MNGHEADER
+     A*%%TS  SD  20240805  073318  KARTIK      REL-V7R5M0  5770-WDS
+     A                                  1  3'User:'
+     A                                  1  9USER
+     A                                  1 32'Capital Trust Bank'
+     A                                      DSPATR(HI)
+     A                                  1 64'Date:'
+     A                                  2 64'Time:'
+     A                                  1 70DATE
+     A                                      EDTCDE(Y)
+     A                                  2 70TIME
+     A            MNGHDR        40A  O  2 21COLOR(YLW)
+     A                                  3  3'__________________________________-
+     A                                      ___________________________________-
+     A                                      ______'
+     A                                      COLOR(BLU)
+     A          R MNGFOOTER
+     A*%%TS  SD  20240802  061108  KARTIK      REL-V7R5M0  5770-WDS
+     A                                      OVERLAY
+     A            MNGFTRL1      75A  O 22  3COLOR(BLU)
+     A            MNGFTRL2      75A  O 23  3COLOR(BLU)
+     A            MNGERRMSG     75A  O 24  3DSPATR(HI)
+     A          R MNGMAINSCR
+     A*%%TS  SD  20240806  051812  KARTIK      REL-V7R5M0  5770-WDS
+     A                                      CA03(03 'Exit')
+     A                                      CF05(05 'Refresh')
+     A                                      CA12(12 'Cancel')
+     A                                      OVERLAY
+     A                                  8  3'Select one of the following:'
+     A                                      COLOR(BLU)
+     A                                 10  7'1. Work with customer representati-
+     A                                      ve details'
+     A                                 11  7'2. Work with customer details'
+     A                                 12  7'3. Work with customer account deta-
+     A                                      ils'
+     A                                 13  7'4. Display transaction history'
+     A                                 14  7'5. Work with loan details'
+     A                                 15  7'6. Change password'
+     A                                 17  3'Selection'
+     A            SMNGCHOICE     1Y 0B 17 14EDTCDE(4)
+     A                                      VALUES(1 2 3 4 5 6)
+     A          R CRSFLM01                  SFL
+     A*%%TS  SD  20240805  070601  KARTIK      REL-V7R5M0  5770-WDS
+     A            S1CRID    R        O 10 11REFFLD(CUSTREPPFR/CRID KARTIKCS/CUS-
+     A                                      TREPPF)
+     A            S1CRNAME  R        O 10 27REFFLD(CUSTREPPFR/CRNAME KARTIKCS/C-
+     A                                      USTREPPF)
+     A            S1CRMOB   R        O 10 69REFFLD(CUSTREPPFR/CRMOB KARTIKCS/CU-
+     A                                      STREPPF)
+     A                                      EDTCDE(4)
+     A            S1CRDOJ   R        O 10 53REFFLD(CUSTREPPFR/CRDOJ KARTIKCS/CU-
+     A                                      STREPPF)
+     A            S1OPTION       1Y 0B 10  5EDTCDE(4)
+     A  25                                  DSPATR(RI)
+     A  26                                  DSPATR(PC)
+     A          R CRCTLM01                  SFLCTL(CRSFLM01)
+     A*%%TS  SD  20240802  051825  KARTIK      REL-V7R5M0  5770-WDS
+     A                                      CA03(03 'Exit')
+     A                                      CF05(05 'Refresh')
+     A                                      CF06(06 'NewRecord')
+     A                                      CA12(12 'Cancel')
+     A                                      OVERLAY
+     A  21                                  SFLDSP
+     A  22                                  SFLDSPCTL
+     A  23                                  SFLCLR
+     A  24                                  SFLEND(*MORE)
+     A                                      SFLSIZ(9999)
+     A                                      SFLPAG(0010)
+     A                                  4 45'Position to  . . . . .'
+     A            POSITIONTO    10A  B  4 70
+     A                                  6  3'Type options, press Enter.'
+     A                                      COLOR(BLU)
+     A                                  7  4'2=Edit   4=Delete   5=Display Deta-
+     A                                      ils'
+     A                                      COLOR(BLU)
+     A                                  9  3'Opt'
+     A                                      DSPATR(HI)
+     A                                  9 11'CR Id'
+     A                                      DSPATR(HI)
+     A                                  9 27'CR Name'
+     A                                      DSPATR(HI)
+     A                                  9 53'D.O.J'
+     A                                      DSPATR(HI)
+     A                                  9 69'Contact No.'
+     A                                      DSPATR(HI)
+     A          R MNGCURDSCR
+     A*%%TS  SD  20240806  062747  KARTIK      REL-V7R5M0  5770-WDS
+     A                                      CA03(03 'Exit')
+     A                                      CF04(04 'Prompt')
+     A                                      CF05(05 'Refresh')
+     A                                      CF07(07 'Confirm')
+     A                                      CA12(12 'Cancel')
+     A                                      OVERLAY
+     A            PRMTFLD       10A  H
+     A            RCD           10A  H
+     A            POS            4S 0H
+     A                                  5  3'CR ID. . . . . . .'
+     A                                      DSPATR(HI)
+     A                                  6  3'CR Name. . . . . .'
+     A                                      DSPATR(HI)
+     A                                  7  3'CR Gender. . . . .'
+     A                                      DSPATR(HI)
+     A                                  8  3'CR D.O.B.. . . . .'
+     A                                      DSPATR(HI)
+     A                                  9  3'CR D.O.J.. . . . .'
+     A                                      DSPATR(HI)
+     A                                 11  3'Current Address. .'
+     A                                      DSPATR(HI)
+     A                                 12  3'Permanent Address.'
+     A                                      DSPATR(HI)
+     A                                 13  3'State. . . . . . .'
+     A                                      DSPATR(HI)
+     A                                 14  3'City . . . . . . .'
+     A                                      DSPATR(HI)
+     A                                 15  3'Pin Code . . . . .'
+     A                                      DSPATR(HI)
+     A                                 17  3'Mobile Number. . .'
+     A                                      DSPATR(HI)
+     A                                 18  3'Alt Mobile Number.'
+     A                                      DSPATR(HI)
+     A                                 19  3'Email Address. . .'
+     A                                      DSPATR(HI)
+     A            S2CRID    R        O  5 23REFFLD(CUSTREPPFR/CRID KARTIKCS/CUS-
+     A                                      TREPPF)
+     A            S2CRNAME  R        B  6 23REFFLD(CUSTREPPFR/CRNAME KARTIKCS/C-
+     A                                      USTREPPF)
+     A  31                                  DSPATR(RI)
+     A  31                                  DSPATR(PC)
+     A            GENDER         2Y 0B  7 23SNGCHCFLD((*NUMROW 1))
+     A                                      CHOICE(1 '>MALE')
+     A                                      CHOICE(2 '>FEMALE')
+     A                                      CHOICE(3 '>OTHER')
+     A            S2CRDOB   R        B  8 23REFFLD(CUSTREPPFR/CRDOB KARTIKCS/CU-
+     A                                      STREPPF)
+     A                                      DATFMT(*USA)
+     A                                      TEXT('REPRESENTATIVE DATE OF BIRTH')
+     A  32                                  DSPATR(RI)
+     A  33                                  DSPATR(PC)
+     A            S2CRDOJ   R        B  9 23REFFLD(CUSTREPPFR/CRDOJ KARTIKCS/CU-
+     A                                      STREPPF)
+     A                                      DATFMT(*USA)
+     A                                      TEXT('REPRESENTATIVE DATE OF JOIN')
+     A  33                                  DSPATR(RI)
+     A  33                                  DSPATR(PC)
+     A            S2CRCURADDR        B 11 23REFFLD(CUSTREPPFR/CRCURADDR KARTIKC-
+     A                                      S/CUSTREPPF)
+     A  34                                  DSPATR(RI)
+     A  34                                  DSPATR(PC)
+     A            S2CRPRMADDR        B 12 23REFFLD(CUSTREPPFR/CRPRMADDR KARTIKC-
+     A                                      S/CUSTREPPF)
+     A  35                                  DSPATR(RI)
+     A  35                                  DSPATR(PC)
+     A            S2CITY    R        B 14 23REFFLD(CUSTREPPFR/CITY KARTIKCS/CUS-
+     A                                      TREPPF)
+     A  37                                  DSPATR(RI)
+     A  37                                  DSPATR(PC)
+     A            S2CRMOB   R        B 17 23REFFLD(CUSTREPPFR/CRMOB KARTIKCS/CU-
+     A                                      STREPPF)
+     A                                      EDTCDE(4)
+     A  38                                  DSPATR(RI)
+     A  38                                  DSPATR(PC)
+     A            S2CREMAIL R        B 19 23REFFLD(CUSTREPPFR/CREMAIL KARTIKCS/-
+     A                                      CUSTREPPF)
+     A                                      CNTFLD(050)
+     A  40                                  DSPATR(RI)
+     A  40                                  DSPATR(PC)
+     A                                  8 35'(DD/MM/YYYY)'
+     A                                      COLOR(BLU)
+     A                                  9 35'(DD/MM/YYYY)'
+     A                                      COLOR(BLU)
+     A            S2CRALTMOBR        B 18 23REFFLD(CUSTREPPFR/CRALTMOB KARTIKCS-
+     A                                      /CUSTREPPF)
+     A                                      EDTCDE(4)
+     A  39                                  DSPATR(RI)
+     A  39                                  DSPATR(PC)
+     A            S2STATE   R        B 13 23REFFLD(CUSTREPPFR/STATE KARTIKCS/CU-
+     A                                      STREPPF)
+     A  36                                  DSPATR(RI)
+     A  36                                  DSPATR(PC)
+     A                                 13 40'(F4=Prompt)'
+     A                                      COLOR(BLU)
+     A                                 14 40'(F4=Prompt)'
+     A                                      COLOR(BLU)
+     A            S2PINCODE R        O 15 23REFFLD(CUSTREPPFR/PINCODE KARTIKCS/-
+     A                                      CUSTREPPF)

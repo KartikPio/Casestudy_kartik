@@ -1,0 +1,55 @@
+-- ------------------------------------------------------------------------------- //
+-- Created By..........: Programmers.io @ 2024                                     //
+-- Created Date........: 2024/07/18                                                //
+-- Developer...........: Kartik Parihar                                            //
+-- Description.........: Account Table                                             //
+-- ------------------------------------------------------------------------------- //
+-- MODIFICATION LOG:                                                               //
+-- ------------------------------------------------------------------------------- //
+-- Date    | Mod_ID  | Developer  | Case and Description                           //
+-- --------|---------|------------|----------------------------------------------- //
+-- 24/07/16|         | Kartik Pa  | File Created                                   //
+-- ------------------------------------------------------------------------------- //
+-- Compilation Instruction                                                         //
+-- ------------------------------------------------------------------------------- //
+-- RUNSQLSTM SRCFILE(KARTIKCS/QDDLSRC) SRCMBR(ACCPF) COMMIT(*NONE) DFTRDBCOL(KARTIKCS) //
+-- ------------------------------------------------------------------------------- //
+Create or Replace table Account_Table(
+    Acc_No      For Column AccNO        Numeric(11) Not Null,
+    Cust_Id     For Column CustId       Char(10) Not Null,
+    Acc_Type    For Column AccType      Char(10) With Default ' ',
+    Acc_Blnce   For Column AccBlnce     Numeric(15) With Default 0,
+    Br_Code     For Column BrCode       Char(11) With Default ' ',
+    Acc_OpnDt   For Column AccOpnDt     Date,
+    I_Rate      For Column IRate        Decimal(5,2) With Default 0.0,
+    Acc_Stauts  For Column AccStatus    Char(10) With Default ' ',
+Primary Key(AccNO),
+Foreign key(CustID) REFERENCES CustPF(CId)
+)
+RcdFmt AccPFR;
+
+Rename Table Account_Table to System Name AccPF;
+
+Label On Table Account_Table Is 'Account pf for Account Details';
+
+Label On Column Account_Table(
+    Acc_No      Is 'Account Number',
+    Cust_Id     Is 'Customer Id',
+    Acc_Type    Is 'Account type',
+    Acc_Blnce   Is 'Account Balance',
+    Br_Code     Is 'Branch Code',
+    Acc_OpnDt   Is 'Account Opening Date',
+    I_Rate      Is 'Interest Rate',
+    Acc_Stauts  Is 'Account Status'
+);
+
+Label On Column Account_Table(
+    Acc_No      Text Is 'Account Number',
+    Cust_Id     Text Is 'Customer Id',
+    Acc_Type    Text Is 'Account type',
+    Acc_Blnce   Text Is 'Account Balance',
+    Br_Code     Text Is 'Branch Code',
+    Acc_OpnDt   Text Is 'Account Opening Date',
+    I_Rate      Text Is 'Interest Rate',
+    Acc_Stauts  Text Is 'Account Status'
+);

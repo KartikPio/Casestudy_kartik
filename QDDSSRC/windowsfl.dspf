@@ -1,0 +1,38 @@
+     A*%%TS  SD  20240806  051724  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%EC
+     A                                      DSPSIZ(24 80 *DS3)
+     A          R DUP_RECORD
+     A*%%TS  SD  20240805  062242  KARTIK      REL-V7R5M0  5770-WDS
+     A                                  1 21' '
+     A          R STATESFL01                SFL
+     A*%%TS  SD  20240805  062242  KARTIK      REL-V7R5M0  5770-WDS
+     A            W1OPTION       1Y 0B  6  4EDTCDE(4)
+     A            W1SATE        15   O  6  7
+     A            W1PINCODE      6  0O  6 24
+     A          R STATECTL01                SFLCTL(STATESFL01)
+     A*%%TS  SD  20240806  051724  KARTIK      REL-V7R5M0  5770-WDS
+     A                                      CA12(12 'Cancel')
+     A                                      OVERLAY
+     A  31                                  SFLDSP
+     A  32                                  SFLDSPCTL
+     A  33                                  SFLCLR
+     A  34                                  SFLEND(*MORE)
+     A                                      SFLSIZ(9999)
+     A                                      SFLPAG(0006)
+     A                                      WINDOW(WINDOWFTR)
+     A            W1HEADER      13A  O  2 10COLOR(YLW)
+     A                                  3  2'Type option, press Enter.'
+     A                                      COLOR(BLU)
+     A                                  4  4'1=Select'
+     A                                      COLOR(BLU)
+     A                                  5  2'Opt'
+     A                                      DSPATR(HI)
+     A            W1FLDH01       5A  O  5  7
+     A            W1FLDH02       8A  O  5 24
+     A          R WINDOWFTR
+     A*%%TS  SD  20240805  062242  KARTIK      REL-V7R5M0  5770-WDS
+     A                                      OVERLAY
+     A                                      WINDOW(5 22 14 33)
+     A                                 12  2'F12=Cancel'
+     A                                      COLOR(BLU)
+     A            W1ERRORMSG    25   O 13  2DSPATR(HI)

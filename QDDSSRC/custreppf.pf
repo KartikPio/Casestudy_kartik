@@ -1,0 +1,33 @@
+                                            REF(STATEPF)
+     A          R CUSTREPPFR
+     A            CRID          10A         COLHDG('CR_ID')
+                                            TEXT('REPRESENTATIVE ID')
+     A            CRNAME        20A         COLHDG('CR_NAME')
+     A                                      TEXT('REPRESENTATIVE NAME')
+     A            CRGENDER       6A         COLHDG('CR_GENDER')
+     A                                      TEXT('REPRESENTATIVE GENDER')
+     A            CRMOB         10S 0       COLHDG('CR_MOBILE_NO')
+     A                                      TEXT('REPRESENTATIVE MOBILE NO')
+     A            CRALTMOB      10S 0       COLHDG('CR_ALT_MOBILE_NO')
+     A                                      TEXT('REPRESENTATIVE ALT MOBILE NO')
+     A            CRDOB           L         COLHDG('CR_DATE_OF_BIRTH')
+     A                                      TEXT('REPRESENTATIVE DATE OF BIRTH')
+     A            CRDOJ           L         COLHDG('CR_DATE_OF_JOINING')
+     A                                      TEXT('REPRESENTATIVE DATE OF JOIN')
+     A            CREMAIL      100A         COLHDG('CR_EMAIL_ADDRESS')
+     A                                      TEXT('REPRESENTATIVE EMAIL ADDRESS')
+     A            CRCURADDR     50A         COLHDG('CR_CURRENT_ADDRESS')
+     A                                      TEXT('REPRESENTATIVE CURRENT ADDR')
+     A            CRPRMADDR     50A         COLHDG('CR PERMANENT ADDRESS')
+     A                                      TEXT('REPRESENTATIVE PERMANET ADDR')
+     A            STATE     R
+     A                                      TEXT('REPRESENTATIVE STATE')
+     A            CITY      R
+     A                                      TEXT('REPRESENTATIVE CITY')
+     A            PINCODE   R
+     A                                      TEXT('REPRESENTATIVE PIN CODE')
+     A            CRADDTSTMP      Z         COLHDG('CR_ADD_TIMESTAMP')
+     A                                      TEXT('REPRESENTATIVE ADD TIMESTAMP')
+     A            CRUPDTSTMP      Z         COLHDG('CR_UPDATE_TIMESTAMP')
+     A                                      TEXT('REPRESENTATIVE UPD TIMESTAMP')
+     A          K CRID

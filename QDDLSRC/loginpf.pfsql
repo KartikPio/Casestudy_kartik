@@ -1,0 +1,41 @@
+-- ------------------------------------------------------------------------------- //
+-- Created By..........: Programmers.io @ 2024                                     //
+-- Created Date........: 2024/07/15                                                //
+-- Developer...........: Kartik Parihar                                            //
+-- Description.........: Login Table                                               //
+-- ------------------------------------------------------------------------------- //
+-- MODIFICATION LOG:                                                               //
+-- ------------------------------------------------------------------------------- //
+-- Date    | Mod_ID  | Developer  | Case and Description                           //
+-- --------|---------|------------|----------------------------------------------- //
+-- 24/07/15|         | Kartik Pa  | File Created                                   //
+-- ------------------------------------------------------------------------------- //
+-- Compilation Instruction                                                         //
+-- ------------------------------------------------------------------------------- //
+-- RUNSQLSTM SRCFILE(KARTIKCS/QDDLSRC) SRCMBR(LOGINPF) COMMIT(*NONE) DFTRDBCOL(KARTIKCS) //
+-- ------------------------------------------------------------------------------- //
+Create or Replace Table Login_Table(
+    User_Id         For Column UserId         Char(10) Not Null,
+    User_Pass       For Column UserPass       Char(20) With Default ' ',
+    Sec_Qus         For Column SecQus         Char(50) With Default ' ',
+    Sec_Ans         For Column SecAns         Char(10) With Default ' ',
+Primary Key(UserId)
+)
+RcdFmt LoginPFR;
+
+Rename table Login_Table to System Name LOGINPF;
+
+Label On Table Login_Table Is 'Login Table For BANK MANAGEMENT SYSTEM' ;
+
+Label On Column Login_Table(
+ User_Id      Is 'User Id',
+ User_Pass    Is 'User Password',
+ Sec_Qus      Is 'Security Question',
+ Sec_Ans      Is 'Security Answer');
+
+Label On Column Login_Table(
+ User_Id      Text Is 'User Id',
+ User_Pass    Text Is 'User Password',
+ Sec_Qus      Text Is 'Security Question',
+ Sec_Ans      Text Is 'Security Answer');
+
