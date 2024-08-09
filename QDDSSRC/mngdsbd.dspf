@@ -1,4 +1,4 @@
-     A*%%TS  SD  20240806  062747  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20240809  060301  KARTIK      REL-V7R5M0  5770-WDS
      A*%%EC
      A                                      DSPSIZ(24 80 *DS3)
      A                                      INDARA
@@ -58,7 +58,7 @@
      A  25                                  DSPATR(RI)
      A  26                                  DSPATR(PC)
      A          R CRCTLM01                  SFLCTL(CRSFLM01)
-     A*%%TS  SD  20240802  051825  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20240809  060301  KARTIK      REL-V7R5M0  5770-WDS
      A                                      CA03(03 'Exit')
      A                                      CF05(05 'Refresh')
      A                                      CF06(06 'NewRecord')
@@ -88,12 +88,13 @@
      A                                  9 69'Contact No.'
      A                                      DSPATR(HI)
      A          R MNGCURDSCR
-     A*%%TS  SD  20240806  062747  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20240808  083343  KARTIK      REL-V7R5M0  5770-WDS
      A                                      CA03(03 'Exit')
      A                                      CF04(04 'Prompt')
      A                                      CF05(05 'Refresh')
      A                                      CF07(07 'Confirm')
      A                                      CA12(12 'Cancel')
+     A                                      RTNCSRLOC(&RCD &PRMTFLD &POS)
      A                                      OVERLAY
      A            PRMTFLD       10A  H
      A            RCD           10A  H
@@ -136,13 +137,13 @@
      A                                      CHOICE(3 '>OTHER')
      A            S2CRDOB   R        B  8 23REFFLD(CUSTREPPFR/CRDOB KARTIKCS/CU-
      A                                      STREPPF)
-     A                                      DATFMT(*USA)
+     A                                      DATFMT(*EUR)
      A                                      TEXT('REPRESENTATIVE DATE OF BIRTH')
      A  32                                  DSPATR(RI)
      A  33                                  DSPATR(PC)
      A            S2CRDOJ   R        B  9 23REFFLD(CUSTREPPFR/CRDOJ KARTIKCS/CU-
      A                                      STREPPF)
-     A                                      DATFMT(*USA)
+     A                                      DATFMT(*EUR)
      A                                      TEXT('REPRESENTATIVE DATE OF JOIN')
      A  33                                  DSPATR(RI)
      A  33                                  DSPATR(PC)
@@ -168,17 +169,17 @@
      A                                      CNTFLD(050)
      A  40                                  DSPATR(RI)
      A  40                                  DSPATR(PC)
-     A                                  8 35'(DD/MM/YYYY)'
+     A                                  8 35'(DD.MM.YYYY)'
      A                                      COLOR(BLU)
-     A                                  9 35'(DD/MM/YYYY)'
+     A                                  9 35'(DD.MM.YYYY)'
      A                                      COLOR(BLU)
      A            S2CRALTMOBR        B 18 23REFFLD(CUSTREPPFR/CRALTMOB KARTIKCS-
      A                                      /CUSTREPPF)
      A                                      EDTCDE(4)
      A  39                                  DSPATR(RI)
      A  39                                  DSPATR(PC)
-     A            S2STATE   R        B 13 23REFFLD(CUSTREPPFR/STATE KARTIKCS/CU-
-     A                                      STREPPF)
+     A            S2STATE   R        B 13 23REFFLD(CUSTREPPFR/STATES KARTIKCS/C-
+     A                                      USTREPPF)
      A  36                                  DSPATR(RI)
      A  36                                  DSPATR(PC)
      A                                 13 40'(F4=Prompt)'

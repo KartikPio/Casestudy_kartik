@@ -13,7 +13,7 @@
 // ------------------------------------------------------------------------------- //
 
 // Control Option
-Ctl-Opt Option(*Nodebugio : *Srcstmt);
+Ctl-Opt Option(*Nodebugio : *Srcstmt) BndDir('KARTIKCS/STATEBND');
 Ctl-Opt NoMain;
 
 // File Declaration
@@ -52,12 +52,13 @@ End-Ds;
 Dcl-S #Rrn       Zoned(4) Inz(*Zero);
 Dcl-S PCrId      Char(10) Inz(*Blank);
 Dcl-S CrIdSubfix Zoned(8) Inz(*Zero);
+Dcl-S KeyField   Char(15) Inz(*Zero);
 
 // Main Code
 
 Dcl-Proc CRSubFile Export;
    IndExit = *Off;
-   Dow INdExit = *Off;
+   Dow IndExit = *Off;
       ClearSfl();
       LoadSfl();
       DisplaySfl();
@@ -118,9 +119,10 @@ Dcl-Proc LoadSfl;
    Exec Sql
       Open SflCursor;
 
+    Exec Sql
+       Fetch From SflCursor Into :S1CrId, :S1CrName, :S1CrDoj, :S1CRMob;
+
    Dow SqlCode = 0;
-      Exec Sql
-         Fetch Next From SflCursor Into :S1CrId, :S1CrName, :S1CrDoj, :S1CRMob;
 
       #Rrn += 1;
 
@@ -129,6 +131,9 @@ Dcl-Proc LoadSfl;
       EndIF;
 
       Write CRSflM01;
+
+    Exec Sql
+       Fetch Next From SflCursor Into :S1CrId, :S1CrName, :S1CrDoj, :S1CRMob;
 
    EndDo;
    Exec Sql
@@ -167,7 +172,7 @@ Dcl-Proc InsertNewRec;
       Select Max(CrId) Into :PCrId From CustRepPf;
 
    If PCrId  = *Blank;
-      S2CrId = 'CR001';
+      S2CrId = 'CR00000001';
    Else;
       CrIdSubfix = %Int(%Subst(PCrId : 3)) + 1;
       S2CrId     = 'CR' + %Editc(CrIdSubfix : 'X');
@@ -176,8 +181,10 @@ Dcl-Proc InsertNewRec;
    Dow IndExit = *Off Or IndCancel = *Off;
       Write MngHeader;
       Write MngFooter;
+    // ------------------------
+      S2PINCODE = 666666;
       Exfmt MngCurdScr;
-
+    // -------------------------
       Clear MngErrmsg;
       ResetInd();
 
@@ -193,8 +200,16 @@ Dcl-Proc InsertNewRec;
             Clear MngErrMsg;
             Clear MngCurdScr;
 
-         When IndPrompt = *On;
-            //StateCityPrmpt();
+         When PrmtFld ='S2STATE' And IndPrompt = *On;
+            IndPrompt = *Off;
+            KeyField  = 'STATE';
+            S2State   = StateCityPrmpt(KeyField);
+
+         When PrmtFld ='S2CITY' And IndPrompt = *On;
+            IndPrompt = *Off;
+            KeyField  = S2State;
+            S2City    = StateCityPrmpt(KeyField);
+
 
          When IndConfirm = *On;
             IndConfirm   = *Off;
@@ -223,12 +238,29 @@ Dcl-Proc ResetInd;
    IndCrEmail   = *Off;
 End-Proc;
 
+//------------------------------------------------------------------------------------ //
+// Procedure Name: InsertRec                                                          //
+// Description   : Procedure to Write Pf from Display file                            //
+//------------------------------------------------------------------------------------//
 Dcl-Proc InsertRec;
+   Dcl-S HGender Char(6) Inz(*Blank);
+
+   Select;
+      When Gender = 1;
+         HGender  = 'Male';
+      When Gender = 2;
+         HGender  = 'Female';
+      when Gender = 3;
+         HGender  = 'Other';
+   EndSl;
+
    Exec Sql
-      Insert Into KartikCs/CustRerpPF
-      (CrId, CrName, CrGender, CrDob, CrDoj, CrCurAddr, CrPrmAddr, State, City, PinCode,
+      Insert Into KartikCs/CustRepPF
+      (CrId, CrName, CrGender, CrDob, CrDoj, CrCurAddr, CrPrmAddr, States, City, PinCode,
        CrMob, CrAltMob, CrEmail)
-       Values(:S2CrId, :S2Crname, :Gender, :S2CrDob, :S2CrDoj, :S2CrCurAdd, :S2CrPrmAdd,
+       Values(:S2CrId, :S2Crname, :HGender, :S2CrDob, :S2CrDoj, :S2CrCurAdd, :S2CrPrmAdd,
                :S2State, :S2City, :S2PinCode, :S2CrMob, :S2CrAltMob, :S2CrEmail);
 
 End-Proc;
+
+

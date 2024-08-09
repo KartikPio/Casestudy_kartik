@@ -20,7 +20,7 @@
      A                                      TEXT('REPRESENTATIVE CURRENT ADDR')
      A            CRPRMADDR     50A         COLHDG('CR PERMANENT ADDRESS')
      A                                      TEXT('REPRESENTATIVE PERMANET ADDR')
-     A            STATE     R
+     A            STATES    R
      A                                      TEXT('REPRESENTATIVE STATE')
      A            CITY      R
      A                                      TEXT('REPRESENTATIVE CITY')

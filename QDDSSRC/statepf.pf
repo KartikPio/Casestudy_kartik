@@ -1,8 +1,8 @@
                 R STATEPFR
-     A            STATE         15A         COLHDG('STATE')
+     A            STATES        15A         COLHDG('STATE')
      A                                      TEXT('STATE')
      A            CITY          15A         COLHDG('CITY')
      A                                      TEXT('CITY')
      A            PINCODE        6S 0       COLHDG('PIN CODE')
      A                                      TEXT('PIN CODE')
-     A          K STATE
+     A          K STATES

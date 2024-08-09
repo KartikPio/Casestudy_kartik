@@ -18,3 +18,6 @@ End-Pr;
 Dcl-Pr  CRSubFile;
 End-Pr;
 
+Dcl-Pr StateCityPrmpt Char(15);
+   PState Char(15);
+End-Pr;
