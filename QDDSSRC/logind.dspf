@@ -1,4 +1,4 @@
-     A*%%TS  SD  20240731  074346  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20240820  084628  KARTIK      REL-V7R5M0  5770-WDS
      A*%%EC
      A                                      DSPSIZ(24 80 *DS3)
      A                                      INDARA
@@ -19,11 +19,11 @@
      A                                      ______'
      A                                      COLOR(BLU)
      A          R LOGINMAIN
-     A*%%TS  SD  20240731  074346  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20240820  084628  KARTIK      REL-V7R5M0  5770-WDS
      A                                      CA03(03 'Exit')
      A                                      CF06(06 'NewAccount')
      A                                      CF08(08 'ForgotPassword')
-     A                                      CF05(05 'Refresh')
+     A                                      CA05(05 'Refresh')
      A                                      OVERLAY
      A                                 11 17'User Id. . . . . . :'
      A                                      DSPATR(HI)
@@ -42,12 +42,12 @@
      A            S1ERRORMSG    76A  O 24  3DSPATR(HI)
      A            S1FTRLINE1    76A  O 22  3COLOR(BLU)
      A          R FSTLGINSCR
-     A*%%TS  SD  20240730  092014  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20240820  084628  KARTIK      REL-V7R5M0  5770-WDS
      A                                      CA03(03 'Exit')
      A                                      CF07(07 'Confirm')
      A                                      CA12(12 'Cancel')
      A                                      CF04(04 'Prompt')
-     A                                      CF05(05 'Refresh')
+     A                                      CA05(05 'Refresh')
      A                                      RTNCSRLOC(&RCD &PRMTFLD &POS)
      A                                      OVERLAY
      A            PRMTFLD       10A  H
@@ -83,13 +83,13 @@
      A N30                                  DSPATR(UL)
      A  22                                  DSPATR(PC)
      A  30                                  DSPATR(PR)
-     A            S2PROMPT      11   O 10 65COLOR(BLU)
+     A            S2PROMPT      11A  O 10 65COLOR(BLU)
      A          R FGTPSWSCR
-     A*%%TS  SD  20240726  071259  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20240820  084628  KARTIK      REL-V7R5M0  5770-WDS
      A                                      CA03(03 'Exit')
      A                                      CF07(07 'Confirm')
      A                                      CA12(12 'Cancel')
-     A                                      CF05(05 'Refresh')
+     A                                      CA05(05 'Refresh')
      A                                      OVERLAY
      A                                  8 18'User Id . . . . . . . :'
      A                                      DSPATR(HI)
@@ -105,14 +105,14 @@
      A  26                                  DSPATR(PC)
      A            S3CNFMPSWD    20A  B 14 42DSPATR(ND)
      A  27                                  DSPATR(PC)
-     A            S3USERID      10   B  8 42
+     A            S3USERID      10A  B  8 42
      A  22                                  DSPATR(RI)
      A  22                                  DSPATR(PC)
      A          R SECQESWNDW
-     A*%%TS  SD  20240730  071550  KARTIK      REL-V7R5M0  5770-WDS
-     A                                      WINDOW(8 26 13 40)
+     A*%%TS  SD  20240820  084628  KARTIK      REL-V7R5M0  5770-WDS
      A                                      CA12(12 'Cancel')
      A                                      OVERLAY
+     A                                      WINDOW(8 26 13 40)
      A                                      RMVWDW
      A                                      USRRSTDSP
      A                                  2  2'Type option, press Enter.'

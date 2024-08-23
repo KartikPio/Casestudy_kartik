@@ -26,11 +26,11 @@ Dcl-Ds IndicatorDs;
    IndSflDspCtl Ind Pos(32);
    IndSflClr    Ind Pos(33);
    IndSflEnd    Ind Pos(34);
-   IndSflOptRi  Ind Pos(35);
+   IndSflOptRI  Ind Pos(35);
 End-Ds;
 
 //Copy Book Declaration
-/Copy KartikCs/Qrpglesrc,CopyBook
+/Copy KartikCs/Qrpglesrc,Copy_Book
 
 // Variable Declaration
 Dcl-S #Rrn Zoned(4) Inz(*Zero);
@@ -39,29 +39,31 @@ Dcl-S PState Char(15) Inz(*Blank);
 // Main Code
 Dcl-Proc StateCityPrmpt Export;
    Dcl-Pi StateCityPrmpt Char(15);
-      KeyField1 Char(15);
+      GetState1 Char(15);
    End-Pi;
 
    Dow IndCancel = *Off;
-      Write WindowFtr;
+      Clear W1Option;
+      IndSflOptRI = *Off;
       ClearSfl();
-      Loadsfl(KeyField1);
-      DisplaySfl(KeyField1);
+      Loadsfl(GetState1);
+      DisplaySfl(GetState1);
 
       Exec Sql
          Set Option Commit = *None;
 
       If IndCancel = *On;
          IndCancel = *Off;
-         IndSflOptRi = *Off;
+         IndSflOptRI = *Off;
          Clear W1OPTION;
          Clear W1ERRORMSG;
          PState = *Blanks;
          Return PState;
       Else;
-         ReadWsfl(KeyField1);
+         ReadWsfl(GetState1);
          Return PState;
       EndIf;
+
    EndDo;
 End-Proc;
 
@@ -70,6 +72,7 @@ End-Proc;
 // Description   : Procedure to Clear Window Subfile                                   //
 //------------------------------------------------------------------------------------ //
 Dcl-Proc ClearSfl;
+   Write WindowFtr;
    IndSflClr = *On;
    #Rrn      = 0;
    Write StateCtl01;
@@ -82,10 +85,10 @@ End-Proc;
 //------------------------------------------------------------------------------------ //
 Dcl-Proc LoadSfl;
    Dcl-Pi LoadSfl;
-     KeyField1 Char(15);
+     GetState1 Char(15);
    End-Pi;
 
-   If KeyField1 = 'STATE';
+   If GetState1 = 'STATE';
       Exec Sql
          Declare SflCursor Cursor for
          Select Distinct States From StatePf;
@@ -117,7 +120,7 @@ Dcl-Proc LoadSfl;
    Else;
       Exec Sql
          Declare SflCursor1 Cursor for
-         Select City From StatePf Where States = :Keyfield1;
+         Select City From StatePf Where States = :GetState1;
 
       Exec Sql
          Open SflCursor1;
@@ -152,7 +155,7 @@ End-Proc;
 //------------------------------------------------------------------------------------ //
 Dcl-Proc DisplaySfl;
    Dcl-Pi DisplaySfl;
-      KeyField1 Char(15);
+      GetState1 Char(15);
    End-Pi;
 
    IndSflDsp    = *On;
@@ -162,10 +165,8 @@ Dcl-Proc DisplaySfl;
    If #Rrn < 1;
       IndSflDsp = *Off;
    EndIF;
-   //Write MngHeader;
-   //Write MngFooter;
-   //Exfmt MngCurdScr;
-   If KeyField1 = 'STATE';
+
+   If GetState1 = 'STATE';
       W1Header  = 'STATE';
       W1FldH01  = 'STATE';
    Else;
@@ -173,8 +174,6 @@ Dcl-Proc DisplaySfl;
       W1FLDH01 = 'CITY';
    EndIf;
 
-   // Write WindowFtr;
-   Clear W1Option;
    Exfmt StateCtl01;
 
 End-Proc;
@@ -185,7 +184,7 @@ End-Proc;
 //------------------------------------------------------------------------------------ //
 Dcl-Proc ReadWsfl;
    Dcl-Pi ReadWsfl Char(15);
-     KeyField1 Char(15);
+     GetState1 Char(15);
    End-Pi;
    ReadC StateSfl01;
    DoW Not %Eof;
@@ -194,7 +193,9 @@ Dcl-Proc ReadWsfl;
      Return PState;
    Else;
      Clear W1Option;
+     Pstate = *Blank;
    EndIf;
      ReadC StateSfl01;
    EndDo;
+     Return Pstate;
 End-Proc;

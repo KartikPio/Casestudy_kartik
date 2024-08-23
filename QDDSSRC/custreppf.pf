@@ -14,7 +14,7 @@
      A                                      TEXT('REPRESENTATIVE DATE OF BIRTH')
      A            CRDOJ           L         COLHDG('CR_DATE_OF_JOINING')
      A                                      TEXT('REPRESENTATIVE DATE OF JOIN')
-     A            CREMAIL      100A         COLHDG('CR_EMAIL_ADDRESS')
+     A            CREMAIL       50A         COLHDG('CR_EMAIL_ADDRESS')
      A                                      TEXT('REPRESENTATIVE EMAIL ADDRESS')
      A            CRCURADDR     50A         COLHDG('CR_CURRENT_ADDRESS')
      A                                      TEXT('REPRESENTATIVE CURRENT ADDR')

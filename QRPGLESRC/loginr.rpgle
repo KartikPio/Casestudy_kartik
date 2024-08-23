@@ -42,7 +42,7 @@ End-Ds;
 
 
 //Copy Book Declaratioin
-/Copy KartikCS/Qrpglesrc,CopyBook
+/Copy KartikCS/Qrpglesrc,Copy_Book
 
 // Variable Declaration
 Dcl-C Spchar Const('!@#$%^&*()_-+={[]}|\;:,<.>/?');
@@ -366,7 +366,7 @@ Dcl-Proc FgtPswVld;
 End-Proc;
 
 Dcl-Proc  PswdVld;
- If S2NEWPASS  = *Blank;
+   If S2NEWPASS  = *Blank;
       IndNewPassPc = *On;
       S1ErrorMsg   = 'New Password field cannot be blank';
       Return;

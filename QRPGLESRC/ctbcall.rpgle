@@ -41,7 +41,7 @@ Dcl-ds IndicatorDs;
 End-ds;
 
 // Copy Book Declaratioin
-// /Copy KartikCs/Qrpglesrc,CopyBook
+// /Copy KartikCs/Qrpglesrc,Copy_Book
 
 // Variable Declaration
 Dcl-C Spchar Const('!@#$%^&*()_-+={[]}|\;:,<.>/?');

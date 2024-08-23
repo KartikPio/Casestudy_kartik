@@ -27,7 +27,7 @@ Dcl-Ds IndicatorDs;
 End-Ds;
 
 //Copy Book Declaration
-/Copy KartikCS/Qrpglesrc,CopyBook
+/Copy KartikCS/Qrpglesrc,Copy_Book
 
 // Variable Declaration
 
