@@ -48,13 +48,13 @@ Dcl-Ds IndicatorDs;
    IndDltSflDspCtl Ind Pos(43);
    IndDltSlfClr    Ind Pos(44);
    IndDltSflEnd    Ind Pos(45);
-   IndFieldPR      Ind Pos(98);
+   IndFieldPR      Ind Pos(98)  Inz(*Off);
 End-Ds;
 
 Dcl-Ds CrDetails1;
    S2CrId       Char(10)  Inz;
    S2CrName     Char(20)  Inz;
-   HGender      Char(6)   Inz;
+   S2CrGender   Char(6)   Inz;
    S2CrMob      Zoned(10) Inz;
    S2CrAltMob   Zoned(10) Inz;
    S2CrDob      Date      Inz;
@@ -76,23 +76,28 @@ Dcl-Ds DltCrDetailDs Dim(99) Qualified;
   DsCrMob      Zoned(10) Inz;
 End-Ds;
 
+
 //Copy Book Declaration
 /Copy KartikCS/Qrpglesrc,Copy_Book
 
 // Variable Declaration
-Dcl-S #Rrn         Zoned(4)  Inz(*Zero);
-Dcl-S #Rrn1        Zoned(4)  Inz(*Zero);
-Dcl-S CrIdSubfix   Zoned(8)  Inz(*Zero);
-Dcl-S Cnt          Zoned(5)  Inz(*Zero);
-Dcl-S Idx          Zoned(4)  Inz(*Zero);
-Dcl-S PCrId        Char(10)  Inz(*Blank);
-Dcl-S GetState     Char(15)  Inz(*Blank);
-Dcl-S S2CrId#      Char(10)  Inz(*Blank);
+Dcl-S #Rrn         Zoned(4) Inz(*Zero);
+Dcl-S #Rrn1        Zoned(4) Inz(*Zero);
+Dcl-S CrIdSubfix   Zoned(8) Inz(*Zero);
+Dcl-S Cnt          Zoned(5) Inz(*Zero);
+Dcl-S Idx          Zoned(5) Inz(*Zero);
+Dcl-S Idx1         Zoned(4) Inz(1);
+Dcl-S PCrId        Char(10) Inz(*Blank);
+Dcl-S GetState     Char(15) Inz(*Blank);
+Dcl-S S2CrId#      Char(10) Inz(*Blank);
+Dcl-S #CrId        Char(20) Inz(*Blank);
+Dcl-S ArrCrId      Char(20) Dim(9999);
+Dcl-S Deleteflag   Ind      Inz(*Off);
 DCl-C CapsAlpha    Const('ABCDEFGHIJKLMNOPQRSTUVWXYZ ');
-Dcl-c Regex1       Const('^(?:\w+\.?)*\w+@(?:\w+\.)*\w+$');
+Dcl-C Regex1       Const('^(?:\w+\.?)*\w+@(?:\w+\.)*\w+(?:\s+\.?)*$');
 Dcl-S GetTimeStamp TimeStamp;
-// Main Code
 
+// Main Code
 Dcl-Proc CRSubFile Export;
    IndExit = *Off;
    Dow IndExit = *Off;
@@ -122,6 +127,7 @@ Dcl-Proc CRSubFile Export;
 
          When IndInsert = *On;
             IndInsert   = *Off;
+            Clear MngErrMsg;
             InsertNewRec();
          Other;
             OtherOption();
@@ -137,7 +143,7 @@ End-Proc;
 Dcl-Proc ClearSfl;
    IndSflClr = *On;
    #Rrn      = 0;
-   Write CRCTLM01;
+   Write CrCtlM01;
    IndSflClr = *Off;
 End-proc;
 
@@ -167,8 +173,8 @@ Dcl-Proc LoadSfl;
 
       Write CRSflM01;
 
-    Exec Sql
-       Fetch Next From SflCursor Into :S1CrId, :S1CrName, :S1CrDoj, :S1CRMob;
+      Exec Sql
+         Fetch Next From SflCursor Into :S1CrId, :S1CrName, :S1CrDoj, :S1CRMob;
 
    EndDo;
    Exec Sql
@@ -287,22 +293,25 @@ End-Proc;
 // Description   : Procedure to Write Pf from Display file                             //
 //------------------------------------------------------------------------------------ //
 Dcl-Proc InsertRec;
-   Dcl-S HGender Char(6) Inz(*Blank);
 
    Clear S2UpdTs;
    S2AddTs = %Timestamp();
    Select;
       When Gender = 1;
-         HGender  = 'Male';
+         S2CrGender  = 'Male';
       When Gender = 2;
-         HGender  = 'Female';
+         S2CrGender  = 'Female';
       when Gender = 3;
-         HGender  = 'Other';
+         S2CrGender  = 'Other';
    EndSl;
 
    Exec Sql
       Insert Into CustRepPF
       Values(:CrDetails1);
+
+   Exec Sql
+      Insert Into LoginPf(UserId, UserPass)
+      Values (:S2CrId, 'WELCOME');
 
       Clear MNGCURDSCR;
       Exec Sql
@@ -421,14 +430,14 @@ Dcl-Proc MngCurdVld;
       MngErrMsg  = 'Email Address Cannot be blank';
       Return;
    EndIf;
-   // Regex1 = '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
-   Email= S2CrEmail;
+
+   Email = S2CrEmail;
    Exec Sql
       Set :Cnt = RegExp_Count(:Email, :Regex1);
    If Cnt <> 1;
-     IndCrEmail = *On;
-     MngErrMsg  = 'Invalid Email Address';
-     Return;
+      IndCrEmail = *On;
+      MngErrMsg  = 'Invalid Email Address';
+      Return;
    EndIf;
 End-Proc;
 
@@ -443,14 +452,20 @@ Dcl-Proc OtherOption;
          When S1Option = 2;
             UpdateCr();
          When S1Option = 4;
-            DeleteCr();
+            ArrCrId(Idx1) = S1CrId;
+            Idx1 += 1;
+            Deleteflag = *On;
          When S1Option = 5;
             DisplayCr();
          Other;
             Clear S1Option;
       EndSl;
+      Clear S1Option;
       ReadC CrSflM01;
    EndDo;
+   If Deleteflag = *On;
+      DeleteCr();
+   EndIf;
 End-Proc;
 
 //------------------------------------------------------------------------------------ //
@@ -466,9 +481,9 @@ Dcl-Proc UpdateCr;
       From CustRepPF Where CrId = :S2CrId#;
 
    Select;
-      When HGender = 'Male';
+      When S2CrGender = 'Male';
          Gender    = 1;
-      When HGender = 'Female';
+      When S2CrGender = 'Female';
          Gender    = 2;
       Other;
          Gender    = 3;
@@ -536,11 +551,11 @@ Dcl-Proc UpdateRec;
    GetTimeStamp = %Timestamp();
    Select;
       When Gender = 1;
-         HGender  = 'Male';
+         S2CrGender  = 'Male';
       When Gender = 2;
-         HGender  = 'Female';
+         S2CrGender  = 'Female';
       when Gender = 3;
-         HGender  = 'Other';
+         S2CrGender  = 'Other';
    EndSl;
 
    S2UpdTs   = %Timestamp();
@@ -564,29 +579,18 @@ Dcl-Proc DisplayCr;
       Select * Into :CrDetails1
       From CustRepPF Where CrId = :S2CrId#;
 
-   Select;
-      When HGender   = 'Male';
-         Gender      = 1;
-
-      When HGender   = 'Female';
-         Gender      = 2;
-
-      Other;
-
-         Gender      = 3;
-   EndSl;
-
    MNGHDR   = 'Display Customer Representative Details';
    MngFtrL2 = 'F3=Exit   F12=Cancel';
-
+   IndFieldPR = *On;
+   // *In99 = *on;
    Dow IndExit = *Off And IndCancel = *Off;
-      IndFieldPR = *On;
       Write MngHeader;
       Write MngFooter;
       Exfmt MngcurdScr;
 
       If IndExit = *On Or IndCancel   = *On;
          IndCancel   = *Off;
+   //      *In99 = *Off;
          IndFieldPR  = *Off;
          Clear S1Option;
          Leave;
@@ -606,9 +610,33 @@ Dcl-Proc DeleteCr;
 
      If IndCancel = *On;
         IndCancel = *Off;
+        Reset Idx;
+        Reset Idx1;
+        Reset #CrId;
+        Clear ArrCrId;
+        Deleteflag = *Off;
+        Clear S1Option;
         Leave;
      Else;
-        //
+       For Idx = 1 to Idx1-1;
+         #CrId = ArrCrId(Idx);
+         Exec Sql
+            Delete From CustRepPF
+            Where CrId = :#CrId;
+
+         Exec Sql
+            Delete From LoginPf
+            Where UserId = :#CrId;
+       EndFor;
+       MngErrMsg = 'Data deleted succuessfully';
+       Deleteflag = *Off;
+        Reset Idx;
+        Reset Idx1;
+        Reset #CrId;
+        Clear ArrCrId;
+        Deleteflag = *Off;
+        Clear S1Option;
+       Leave;
      EndIf;
   EndDo;
 End-Proc;
@@ -630,23 +658,13 @@ End-Proc;
 // Description   : Procedure to load delete subfile                                   //
 //------------------------------------------------------------------------------------//
 Dcl-Proc LoadDltSfl;
-
-   Exec Sql
-      Declare DltSflCursor Scroll Cursor for
-      Select CrId, CrName, CrDoj, CrMob From CUSTREPPF
-      Where crId = :S1CrId;
-
-   Exec Sql
-      Open DltSflCursor;
-
-   Exec Sql
-      Fetch First From DltSflCursor For 99 Rows Into :DltCrDetailDs;
-
-   Exec Sql
-      Close DltSflCursor;
-
-   Idx = 1;
-   Dow DltCrDetailDs(Idx).DsCrId <> *Blank;
+   For Idx = 1 to Idx1-1;
+      #CrId = ArrCrId(Idx);
+      Exec Sql
+         Select CrId, CrName, CrDoj, CrMob
+         Into :S3CrId, :S3CrName, :S3CrDoj, :S3CrMob
+         From CustRepPF
+         Where CrId = :#CrId;
 
       #Rrn1 += 1;
 
@@ -654,14 +672,10 @@ Dcl-Proc LoadDltSfl;
          Leave;
       EndIf;
 
-      S3CrId   = DltCrDetailDs(Idx).DsCrId;
-      S3CrName = DltCrDetailDs(Idx).DsCrName;
-      S3CrDoj  = DltCrDetailDs(Idx).DsCrDoj;
-      S3CrMob  = DltCrDetailDs(Idx).DsCrMob;
-
       Write CrDltSflM1;
-      Idx += 1;
-   EndDo;
+
+   EndFor;
+
 End-Proc;
 
 //------------------------------------------------------------------------------------ //

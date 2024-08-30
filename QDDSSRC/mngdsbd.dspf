@@ -1,4 +1,4 @@
-     A*%%TS  SD  20240823  025623  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20240830  075954  KARTIK      REL-V7R5M0  5770-WDS
      A*%%EC
      A                                      DSPSIZ(24 80 *DS3)
      A                                      INDARA
@@ -44,12 +44,12 @@
      A            SMNGCHOICE     1Y 0B 17 14EDTCDE(4)
      A                                      VALUES(1 2 3 4 5 6)
      A          R CRSFLM01                  SFL
-     A*%%TS  SD  20240822  090556  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20240830  070021  KARTIK      REL-V7R5M0  5770-WDS
      A            S1CRID    R        O 10 11REFFLD(CUSTREPPFR/CRID KARTIKCS/CUS-
      A                                      TREPPF)
      A            S1CRNAME  R        O 10 27REFFLD(CUSTREPPFR/CRNAME KARTIKCS/C-
      A                                      USTREPPF)
-     A            S1CRMOB   R        O 10 69REFFLD(CUSTREPPFR/CRMOB KARTIKCS/CU-
+     A            S1CRMOB   R        O 10 70REFFLD(CUSTREPPFR/CRMOB KARTIKCS/CU-
      A                                      STREPPF)
      A                                      EDTCDE(4)
      A            S1CRDOJ   R        O 10 53REFFLD(CUSTREPPFR/CRDOJ KARTIKCS/CU-
@@ -59,9 +59,7 @@
      A  26                                  DSPATR(PC)
      A                                      VALUES(2 4 5)
      A          R CRCTLM01                  SFLCTL(CRSFLM01)
-     A*%%TS  SD  20240822  010434  KARTIK      REL-V7R5M0  5770-WDS
-     A                                      SFLSIZ(9999)
-     A                                      SFLPAG(0010)
+     A*%%TS  SD  20240830  062727  KARTIK      REL-V7R5M0  5770-WDS
      A                                      CA03(03 'Exit')
      A                                      CA05(05 'Refresh')
      A                                      CF06(06 'NewRecord')
@@ -71,6 +69,8 @@
      A  22                                  SFLDSPCTL
      A  23                                  SFLCLR
      A  24                                  SFLEND(*MORE)
+     A                                      SFLSIZ(9999)
+     A                                      SFLPAG(0010)
      A                                  4 45'Position to  . . . . .'
      A            POSITIONTO    10A  B  4 70
      A                                  6  3'Type options, press Enter.'
@@ -89,7 +89,7 @@
      A                                  9 69'Contact No.'
      A                                      DSPATR(HI)
      A          R MNGCURDSCR
-     A*%%TS  SD  20240823  025033  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20240827  082802  KARTIK      REL-V7R5M0  5770-WDS
      A                                      CA03(03 'Exit')
      A                                      CF04(04 'Prompt')
      A                                      CA05(05 'Refresh')
@@ -134,8 +134,8 @@
      A  31                                  DSPATR(PC)
      A N98                                  DSPATR(UL)
      A  98                                  DSPATR(PR)
-     A            GENDER         2Y 0B  7 23SNGCHCFLD((*NUMROW 1))
-     A  41                                  DSPATR(RI)
+     A            GENDER         2Y 0B  7 31SNGCHCFLD((*NUMROW 1))
+     A  99                                  DSPATR(ND)
      A  41                                  DSPATR(PC)
      A                                      CHOICE(1 '>MALE')
      A                                      CHOICE(2 '>FEMALE')
@@ -189,8 +189,10 @@
      A  98                                  DSPATR(PR)
      A                                  8 35'(DD.MM.YYYY)'
      A                                      COLOR(BLU)
+     A  98                                  DSPATR(ND)
      A                                  9 35'(DD.MM.YYYY)'
      A                                      COLOR(BLU)
+     A  98                                  DSPATR(ND)
      A            S2CRALTMOBR        B 18 23REFFLD(CUSTREPPFR/CRALTMOB KARTIKCS-
      A                                      /CUSTREPPF)
      A                                      EDTCDE(4)
@@ -206,19 +208,26 @@
      A N98                                  DSPATR(UL)
      A                                 13 40'(F4=Prompt)'
      A                                      COLOR(BLU)
+     A  98                                  DSPATR(ND)
      A                                 14 40'(F4=Prompt)'
      A                                      COLOR(BLU)
+     A  98                                  DSPATR(ND)
      A            S2PINCODE R        O 15 23REFFLD(CUSTREPPFR/PINCODE KARTIKCS/-
      A                                      CUSTREPPF)
+     A            S2CRGENDERR        B  7 23REFFLD(CUSTREPPFR/CRGENDER KARTIKCS-
+     A                                      /CUSTREPPF)
+     A  41                                  DSPATR(RI)
+     A N98                                  DSPATR(UL)
+     A                                      DSPATR(PR)
      A          R CRDLTSFLM1                SFL
-     A*%%TS  SD  20240823  025623  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20240830  070021  KARTIK      REL-V7R5M0  5770-WDS
      A            S3CRID    R        O 10  2REFFLD(CUSTREPPFR/CRID KARTIKCS/CUS-
      A                                      TREPPF)
      A            S3CRNAME  R        O 10 18REFFLD(CUSTREPPFR/CRNAME KARTIKCS/C-
      A                                      USTREPPF)
      A            S3CRDOJ   R        O 10 44REFFLD(CUSTREPPFR/CRDOJ KARTIKCS/CU-
      A                                      STREPPF)
-     A            S3CRMOB   R        O 10 60REFFLD(CUSTREPPFR/CRMOB KARTIKCS/CU-
+     A            S3CRMOB   R        O 10 61REFFLD(CUSTREPPFR/CRMOB KARTIKCS/CU-
      A                                      STREPPF)
      A          R CRDLTCTLM1                SFLCTL(CRDLTSFLM1)
      A*%%TS  SD  20240822  085959  KARTIK      REL-V7R5M0  5770-WDS
@@ -242,4 +251,44 @@
      A                                  9 44'D.O.J'
      A                                      DSPATR(HI)
      A                                  9 60'Contact No.'
+     A                                      DSPATR(HI)
+     A          R CUSTSFLM01                SFL
+     A*%%TS  SD  20240830  075954  KARTIK      REL-V7R5M0  5770-WDS
+     A            S1OPTION       1Y 0B 10  5EDTCDE(4)
+     A  25                                  DSPATR(RI)
+     A  26                                  DSPATR(PC)
+     A            S1CID     R        O 10 11REFFLD(CUSTPFR/CID KARTIKCS/CUSTPF)
+     A            S1CNAME   R        O 10 28REFFLD(CUSTPFR/CNAME KARTIKCS/CUSTP-
+     A                                      F)
+     A            S1CPAN    R        O 10 54REFFLD(CUSTPFR/CPAN KARTIKCS/CUSTPF)
+     A            S1CMOB    R        O 10 70REFFLD(CUSTPFR/CMOB KARTIKCS/CUSTPF)
+     A          R CUSTCTLM01                SFLCTL(CUSTSFLM01)
+     A*%%TS  SD  20240830  070021  KARTIK      REL-V7R5M0  5770-WDS
+     A                                      CA03(03 'Exit')
+     A                                      CA05(05 'Refresh')
+     A                                      CF06(06 'Insert')
+     A                                      CA12(12 'Cancel')
+     A                                      OVERLAY
+     A  21                                  SFLDSP
+     A  22                                  SFLDSPCTL
+     A  23                                  SFLCLR
+     A  24                                  SFLEND(*MORE)
+     A                                      SFLSIZ(9999)
+     A                                      SFLPAG(0010)
+     A                                  4 45'Position to  . . . . .'
+     A            S1POSITION    10   B  4 70
+     A                                  6  3'Type options, press Enter.        -
+     A                                                                         -
+     A                                                  2=Edit   4=Delete   5=D-
+     A                                      isplay Details'
+     A                                      COLOR(BLU)
+     A                                  9  3'Opt'
+     A                                      DSPATR(HI)
+     A                                  9 11'Customer Id  '
+     A                                      DSPATR(HI)
+     A                                  9 28'Customer Name'
+     A                                      DSPATR(HI)
+     A                                  9 54'Pan Number'
+     A                                      DSPATR(HI)
+     A                                  9 69'Contact No.'
      A                                      DSPATR(HI)

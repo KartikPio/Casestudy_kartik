@@ -60,7 +60,7 @@ Dcl-Proc MngDsbrD Export;
             Clear SMngChoice;
 
          When SMngChoice = 2;
-            //CustomerSubFile();
+            CustomerSubFile();
             Clear SMngChoice;
 
          When SMngChoice = 3;
