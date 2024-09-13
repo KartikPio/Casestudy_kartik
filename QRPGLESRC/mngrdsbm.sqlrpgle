@@ -64,7 +64,7 @@ Dcl-Proc MngDsbrD Export;
             Clear SMngChoice;
 
          When SMngChoice = 3;
-            //CustAccSubFile();
+            CustAccSubFile();
             Clear SMngChoice;
 
          When SMngChoice = 4;

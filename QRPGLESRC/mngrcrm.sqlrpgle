@@ -19,7 +19,7 @@ Ctl-Opt NoMain;
 // File Declaration
 Dcl-F MngDsbD WorkStn Indds(IndicatorDs) Sfile(CrSflM01 : #Rrn)
                                          Sfile(CrDltSflM1: #Rrn1);
-// Data Sturcture Declaration
+// Data Structure Declaration
 Dcl-Ds IndicatorDs;
    IndExit         Ind Pos(03);
    IndPrompt       Ind Pos(04);
@@ -54,7 +54,7 @@ End-Ds;
 Dcl-Ds CrDetails1;
    S2CrId       Char(10)  Inz;
    S2CrName     Char(20)  Inz;
-   S2CrGender   Char(6)   Inz;
+   S2CrGender1  Char(6)   Inz;
    S2CrMob      Zoned(10) Inz;
    S2CrAltMob   Zoned(10) Inz;
    S2CrDob      Date      Inz;
@@ -69,14 +69,6 @@ Dcl-Ds CrDetails1;
    S2UpdTs      Timestamp Inz;
 End-Ds;
 
-Dcl-Ds DltCrDetailDs Dim(99) Qualified;
-  DsCrId       Char(10)  Inz;
-  DsCrName     Char(20)  Inz;
-  DsCrDoj      Date      Inz;
-  DsCrMob      Zoned(10) Inz;
-End-Ds;
-
-
 //Copy Book Declaration
 /Copy KartikCS/Qrpglesrc,Copy_Book
 
@@ -90,6 +82,7 @@ Dcl-S Idx1         Zoned(4) Inz(1);
 Dcl-S PCrId        Char(10) Inz(*Blank);
 Dcl-S GetState     Char(15) Inz(*Blank);
 Dcl-S S2CrId#      Char(10) Inz(*Blank);
+Dcl-S S2CrId1      Like(S2CrId);
 Dcl-S #CrId        Char(20) Inz(*Blank);
 Dcl-S ArrCrId      Char(20) Dim(9999);
 Dcl-S Deleteflag   Ind      Inz(*Off);
@@ -153,32 +146,63 @@ End-proc;
 //------------------------------------------------------------------------------------ //
 Dcl-Proc LoadSfl;
    IndOptPC = *On;
-   Exec Sql
-      Declare SflCursor Cursor for
-      Select CrId, CrName, CrDoj, CrMob From CustRepPf;
-
-   Exec Sql
-      Open SflCursor;
-
-   Exec Sql
-       Fetch From SflCursor Into :S1CrId, :S1CrName, :S1CrDoj, :S1CRMob;
-
-   Dow SqlCode = 0;
-
-      #Rrn += 1;
-
-      If #Rrn > 9999;
-         Leave;
-      EndIF;
-
-      Write CRSflM01;
+   If PositionTo <> *Blank;
+      Exec Sql
+         Declare PosCursor Cursor for
+         Select CrId, CrName, CrDoj, CrMob
+         From CustRepPf Where
+         CrId Like '%' Concat Trim(:PositionTo) Concat '%';
 
       Exec Sql
-         Fetch Next From SflCursor Into :S1CrId, :S1CrName, :S1CrDoj, :S1CRMob;
+         Open PosCursor;
 
-   EndDo;
-   Exec Sql
-      Close SflCursor;
+      Exec Sql
+         Fetch From PosCursor Into :S1CrId, :S1CrName, :S1CrDoj, :S1CRMob;
+
+      Dow SqlCode = 0;
+         #Rrn += 1;
+
+         If #Rrn > 9999;
+            Leave;
+         EndIF;
+
+         Write CRSflM01;
+
+         Exec Sql
+            Fetch From PosCursor Into :S1CrId, :S1CrName, :S1CrDoj, :S1CRMob;
+      EndDo;
+
+      Exec Sql
+         Close PosCursor;
+
+   Else;
+      Exec Sql
+         Declare SflCursor Cursor for
+         Select CrId, CrName, CrDoj, CrMob From CustRepPf;
+
+      Exec Sql
+         Open SflCursor;
+
+      Exec Sql
+          Fetch From SflCursor Into :S1CrId, :S1CrName, :S1CrDoj, :S1CRMob;
+
+      Dow SqlCode = 0;
+
+         #Rrn += 1;
+
+         If #Rrn > 9999;
+            Leave;
+         EndIF;
+
+         Write CRSflM01;
+
+         Exec Sql
+            Fetch Next From SflCursor Into :S1CrId, :S1CrName, :S1CrDoj, :S1CRMob;
+
+      EndDo;
+      Exec Sql
+         Close SflCursor;
+      EndIf;
 End-Proc;
 
 //------------------------------------------------------------------------------------ //
@@ -194,6 +218,7 @@ Dcl-Proc DisplaySfl;
       IndSflDsp = *Off;
    EndIf;
 
+   Clear PositionTo;
    MngHdr   = 'Work With Customer Representative';
    MngFtrL2 = 'F3=Exit   F5=Refresh   F6=Add New Record   F12= Cancel';
    Write MngHeader;
@@ -218,6 +243,7 @@ Dcl-Proc InsertNewRec;
    Else;
       CrIdSubfix = %Int(%Subst(PCrId : 3)) + 1;
       S2CrId     = 'CR' + %Editc(CrIdSubfix : 'X');
+      S2CrId1    = S2CrId;
    EndIF;
 
    Dow IndExit = *Off Or IndCancel = *Off;
@@ -244,6 +270,7 @@ Dcl-Proc InsertNewRec;
             IndRefresh   = *Off;
             Clear MngErrMsg;
             Clear MngCurdScr;
+            S2CrId = S2CrId1;
 
          When PrmtFld ='S2STATE' And IndPrompt = *On;
             IndPrompt = *Off;
@@ -254,7 +281,6 @@ Dcl-Proc InsertNewRec;
             IndPrompt = *Off;
             GetState  = S2State;
             S2City    = StateCityPrmpt(GetState);
-
 
          When IndConfirm = *On;
             IndConfirm   = *Off;
@@ -271,7 +297,7 @@ End-Proc;
 
 //------------------------------------------------------------------------------------ //
 // Procedure Name: ResetInd                                                            //
-// Description   : Procedure to turn of all field level indicators                     //
+// Description   : Procedure to turn off all field level indicators                    //
 //------------------------------------------------------------------------------------ //
 Dcl-Proc ResetInd;
    IndOptRI     = *Off;
@@ -297,12 +323,12 @@ Dcl-Proc InsertRec;
    Clear S2UpdTs;
    S2AddTs = %Timestamp();
    Select;
-      When Gender = 1;
-         S2CrGender  = 'Male';
-      When Gender = 2;
-         S2CrGender  = 'Female';
-      when Gender = 3;
-         S2CrGender  = 'Other';
+      When S2CrGender = 'M';
+         S2CrGender1  = 'Male';
+      When S2CrGender = 'F';
+         S2CrGender1  = 'Female';
+      when S2CrGender = 'O';
+         S2CrGender1  = 'Other';
    EndSl;
 
    Exec Sql
@@ -330,7 +356,7 @@ Dcl-Proc MngCurdVld;
 
    Dcl-S Email Varchar(100) Inz(*Blank);
    // Validation for Customer Representative name
-   If S2CrName = *Blank;
+   If S2CrName    = *Blank;
       IndCrNameRI = *On;
       MngErrMsg   = 'Name field cannot be blank';
       Return;
@@ -342,7 +368,7 @@ Dcl-Proc MngCurdVld;
    EndIf;
 
    // Validation for Customer Representative gender
-   If Gender   = 0;
+   If S2CrGender  = ' ';
       IndGenderRI = *On;
       MngErrMsg   = 'Gender cannot be unselected';
       Return;
@@ -481,12 +507,12 @@ Dcl-Proc UpdateCr;
       From CustRepPF Where CrId = :S2CrId#;
 
    Select;
-      When S2CrGender = 'Male';
-         Gender    = 1;
-      When S2CrGender = 'Female';
-         Gender    = 2;
+      When S2CrGender1 = 'Male';
+         S2CrGender    = 'M';
+      When S2CrGender1 = 'Female';
+         S2CrGender    = 'F';
       Other;
-         Gender    = 3;
+         S2CrGender    = 'O';
    EndSl;
 
    MNGHDR   = 'Update Customer Representative Details';
@@ -550,12 +576,12 @@ Dcl-Proc UpdateRec;
 
    GetTimeStamp = %Timestamp();
    Select;
-      When Gender = 1;
-         S2CrGender  = 'Male';
-      When Gender = 2;
-         S2CrGender  = 'Female';
-      when Gender = 3;
-         S2CrGender  = 'Other';
+      When S2CrGender = 'M';
+         S2CrGender1  = 'Male';
+      When S2CrGender = 'F';
+         S2CrGender1  = 'Female';
+      when S2CrGender = 'O';
+         S2CrGender1  = 'Other';
    EndSl;
 
    S2UpdTs   = %Timestamp();
@@ -579,8 +605,17 @@ Dcl-Proc DisplayCr;
       Select * Into :CrDetails1
       From CustRepPF Where CrId = :S2CrId#;
 
-   MNGHDR   = 'Display Customer Representative Details';
-   MngFtrL2 = 'F3=Exit   F12=Cancel';
+   Select;
+      When S2CrGender1 = 'Male';
+         S2CrGender    = 'M';
+      When S2CrGender1 = 'Female';
+         S2CrGender    = 'F';
+      Other;
+         S2CrGender    = 'O';
+   EndSl;
+
+   MNGHDR     = 'Display Customer Representative Details';
+   MngFtrL2   = 'F3=Exit   F12=Cancel';
    IndFieldPR = *On;
    // *In99 = *on;
    Dow IndExit = *Off And IndCancel = *Off;

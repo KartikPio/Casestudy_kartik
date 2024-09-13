@@ -21,3 +21,9 @@ End-Pr;
 Dcl-Pr StateCityPrmpt Char(15);
    PState Char(15);
 End-Pr;
+
+Dcl-Pr CustomerSubFile;
+End-Pr;
+
+Dcl-Pr CustAccSubFile;
+End-pr;
