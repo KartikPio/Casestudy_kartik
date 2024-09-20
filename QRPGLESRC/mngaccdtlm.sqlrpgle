@@ -16,8 +16,8 @@
 Ctl-Opt Option(*Nodebugio : *Srcstmt) NOMain;
 
 // File Declaration
-Dcl-F MngDsbD WorkStn Indds(IndicatorDs) Sfile(AccSfl01 : #Rrn);
-
+Dcl-F MngDsbD WorkStn Indds(IndicatorDs) Sfile(AccSfl01   : #Rrn)
+                                         Sfile(AccDltSfl1 : #Rrn1);
 
 // Data Structure Declaration
 Dcl-Ds IndicatorDs;
@@ -36,6 +36,10 @@ Dcl-Ds IndicatorDs;
    IndAccOpnDtRI   Ind Pos(28);
    IndAccStatusRI  Ind Pos(29);
    IndChoiceRI     Ind Pos(30);
+   IndDltSflDsp    Ind Pos(42);
+   IndDltSflDspCtl Ind Pos(43);
+   IndDltSlfClr    Ind Pos(44);
+   IndDltSflEnd    Ind Pos(45);
    IndFieldPR      Ind Pos(98);
 End-Ds;
 
@@ -45,11 +49,18 @@ Dcl-Ds AccDetails;
    S2IRate     Zoned(5:2) Inz;
    S2AccStats  Char(10)   Inz;
 End-Ds;
+
 //Copy Book Declaration
 /Copy KartikCS/Qrpglesrc,Copy_Book
 
 // Variable Declaration
-Dcl-S #Rrn Zoned(4) Inz(*Zero);
+Dcl-S #Rrn         Zoned(4) Inz(*Zero);
+Dcl-S Idx          Zoned(5) Inz(*Zero);
+Dcl-S Idx1         Zoned(5) Inz(1);
+Dcl-S PCustId      Char(10) Inz(*Zero);
+Dcl-S ArrCustId    Char(20) Dim(9999);
+Dcl-S Deleteflag   Ind      Inz(*Off);
+Dcl-S #Rrn1                 Like(#Rrn);
 Dcl-C AlphaNum 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
 
 // Main Code
@@ -103,34 +114,68 @@ End-proc;
 //------------------------------------------------------------------------------------ //
 Dcl-Proc LoadSfl;
    IndOptPC = *On;
+   If S1Position <> *Blank;
+      Exec Sql
+         Declare PosCursor1 Cursor for
+         Select A.CustId, A.AccType, A.AccStatus, C.CName
+         From Kartikcs/AccPf A
+         Join Kartikcs/CustPf C
+         On A.CustId = C.CId
+         Where CustId Like '%' Concat Trim(:S1Position) Concat '%';
 
-   Exec Sql
-      Declare SflCursor Cursor for
-      Select A.CustId, A.AccType, A.AccStatus, C.CName
-      From AccPf A
-      Join CustPf C
-      On A.CustId = C.CId;
+      Exec Sql
+         Open PosCursor1;
 
-    Exec Sql
-       Open SflCursor;
+      Exec Sql
+         Fetch from PosCursor1 Into :S1CustId, :S1AccType, :S1AccStats, :S1Cname2;
 
-    Exec Sql
-       Fetch From SflCursor Into :S1CustId, :S1AccType, :S1AccStats, :S1Cname2;
+      Dow SqlCode = 0;
+         #Rrn += 1;
 
-    Dow SqlCode = 0;
-       #Rrn += 1;
+         If #Rrn > 9999;
+            Leave;
+         EndIF;
 
-       If #Rrn > 9999;
-          Leave;
-       EndIF;
+         Write AccSfl01;
 
-       Write AccSfl01;
+         Exec Sql
+            Fetch From PosCursor1 Into :S1CustId, :S1AccType, :S1AccStats, :S1Cname2;
+      EndDo;
 
-       Exec Sql
-          Fetch From SflCursor Into :S1CustId, :S1AccType, :S1AccStats, :S1Cname2;
-    EndDo;
-    Exec Sql
-       Close SflCursror;
+      Exec Sql
+         Close PosCursor1;
+
+   Else;
+      Exec Sql
+         Declare SflCursor01 Cursor for
+         Select A.CustId, A.AccType, A.AccStatus, C.CName
+         From Kartikcs/AccPf A
+         Join Kartikcs/CustPf C
+         On A.CustId = C.CId;
+
+      Exec Sql
+         Open SflCursor01;
+
+      Exec Sql
+         Fetch From SflCursor01 Into :S1CustId, :S1AccType, :S1AccStats, :S1Cname2;
+
+      Dow SqlCode = 0;
+         #Rrn += 1;
+
+         If #Rrn > 9999;
+            Leave;
+         EndIF;
+
+         Write AccSfl01;
+
+         Exec Sql
+            Fetch From SflCursor01 Into :S1CustId, :S1AccType, :S1AccStats, :S1Cname2;
+      EndDo;
+
+      Exec Sql
+         Close SflCursor01;
+
+   EndIf;
 End-Proc;
 
 //------------------------------------------------------------------------------------ //
@@ -161,18 +206,23 @@ Dcl-Proc OtherOption;
    ReadC AccSfl01;
    DoW S1Option <> 0;
       Select;
-         When S1Option = 2;
+         When S1Option   = 2;
             UpdateAcc();
-         When S1Option = 4;
-            //DeleteAcc();
-         When S1Option = 5;
-            //DisplayAcc();
+         When S1Option   = 4;
+            ArrCustId(Idx1) = S1CustId;
+            Idx1 += 1;
+            DeleteFlag   = *On;
+         When S1Option   = 5;
+            DisplayAcc();
          Other;
             Clear S1Option;
       EndSl;
       Clear S1Option;
       ReadC AccSfl01;
    EndDo;
+   If Deleteflag = *On;
+      DeleteAcc();
+   EndIf;
 End-Proc;
 
 //------------------------------------------------------------------------------------ //
@@ -186,7 +236,18 @@ Dcl-Proc UpdateAcc;
       Into :S2CustId, :S2AccNo, :S2BrCode, :S2AccType, :S2AccOpnDt, :S2AccStats, :S2CName3
       From AccPf A
       Join CustPf C
-      On A.CustId = C.CId;
+      On A.CustId = C.CId
+      Where A.CustId = :S1CustId;
+
+   If SqlCode = -305;
+   Exec Sql
+      Select A.CustId, A.AccNo, A.AccType, A.AccStatus, C.CName
+      Into :S2CustId, :S2AccNo, :S2AccType, :S2AccStats, :S2CName3
+      From AccPf A
+      Join CustPf C
+      On A.CustId = C.CId
+      Where A.CustId = :S1CustId;
+   EndIf;
 
    MNGHDR   = '         Update Account Details         ';
    MngFtrL2 = 'F3=Exit   F5=Refresh   F7=Confirm   F12=Cancel';
@@ -293,8 +354,8 @@ Dcl-Proc GetAccStatus;
             When W2Choice = '2';
                S2AccStats  = 'APPROVED';
                Clear W2ErrorMsg;
-             When W2Choice = '2';
-               S2AccStats  = 'APPROVED';
+             When W2Choice = '3';
+               S2AccStats  = 'Deny';
                Clear W2ErrorMsg;
             Other;
               IndChoiceRI = *On;
@@ -326,4 +387,142 @@ Dcl-Proc  UpdateRec;
       Set BrCode=:S2BrCode, AccOpnDt=:S2AccOpnDt, IRate=:S2IRate, AccStatus=:S2AccStats
       Where CustId = :S2CustId;
    MngErrMsg  = 'Record Updated Successfully';
+End-Proc;
+
+//------------------------------------------------------------------------------------ //
+// Procedure Name: DisplayCust                                                         //
+// Description   : Procedure to Display Custome Details                                //
+//------------------------------------------------------------------------------------ //
+Dcl-Proc  DisplayAcc;
+   Exec Sql
+      Select A.CustId, A.AccNo, A.BrCode, A.AccType, A.AccOpnDt, A.AccStatus, C.CName
+      Into :S2CustId, :S2AccNo, :S2BrCode, :S2AccType, :S2AccOpnDt, :S2AccStats, :S2CName3
+      From AccPf A
+      Join CustPf C
+      On A.CustId = C.CId
+      Where A.CustId = :S1CustId;
+
+   MNGHDR     = '        Display Account Details        ';
+   MngFtrL2   = 'F3=Exit   F12=Cancel';
+   IndFieldPR = *On;
+
+   Dow IndExit = *Off Or IndCancel = *Off;
+      Write MngHeader;
+      Write MngFooter;
+      Exfmt AccOprtion;
+
+      If IndExit = *On Or IndCancel = *On;
+         IndCancel = *Off;
+         IndFieldPR = *Off;
+         Clear S1Option;
+         Leave;
+      EndIf;
+   EndDo;
+End-Proc;
+
+//------------------------------------------------------------------------------------ //
+// Procedure Name: DeleteAcc                                                           //
+// Description   : Procedure to delete Account details                                 //
+//------------------------------------------------------------------------------------ //
+Dcl-Proc DeleteAcc;
+   Dow IndCancel = *Off;
+      ClearDltSfl();
+      LoadDltSfl();
+      DisplayDltSfl();
+
+      If IndCancel = *On;
+         IndCancel = *Off;
+         Reset Idx;
+         Reset Idx1;
+         Reset PCustId;
+         Clear ArrCustId;
+         DeleteFlag = *Off;
+         Clear S1Option;
+         Leave;
+      Else;
+         For Idx = 1 to Idx1-1;
+            PCustId = ArrCustId(Idx);
+
+            Exec Sql
+               Delete From LoginPf
+               Where UserId = :PCustId;
+
+            Exec Sql
+               Delete From AccPf
+               Where CustId = :PCustId;
+
+            Exec Sql
+               Delete From CustPF
+               Where CId = :PCustId;
+
+         EndFor;
+         MngErrMsg = 'Data deleted succuessfully';
+         Deleteflag = *Off;
+         Reset Idx;
+         Reset Idx1;
+         Reset PCustId;
+         Clear ArrCustId;
+         DeleteFlag = *Off;
+         Clear S1Option;
+         Leave;
+      EndIf;
+   EndDo;
+End-Proc;
+
+//------------------------------------------------------------------------------------ //
+// Procedure Name: ClearDltSfl                                                         //
+// Description   : Procedure to Clear delete subfile                                   //
+//------------------------------------------------------------------------------------ //
+Dcl-Proc ClearDltSfl;
+   IndDltSlfClr = *On;
+   #Rrn1        = 0;
+   Write AccDltCtl1;
+   IndDltSlfClr = *Off;
+End-Proc;
+
+//------------------------------------------------------------------------------------ //
+// Procedure Name: LoadDltSfl                                                         //
+// Description   : Procedure to load delete subfile                                   //
+//------------------------------------------------------------------------------------//
+Dcl-Proc LoadDltSfl;
+   For Idx =1 to Idx1-1;
+      PCustId = ArrCustid(Idx);
+      Exec Sql
+         Select A.CustId, A.AccType, A.AccStatus, C.CName
+         Into :S3CustId, :S3AccType, :S3AccStats, :S3Cname1
+         From Kartikcs/AccPf A
+         Join Kartikcs/CustPf C
+         On A.CustId = C.CId
+         Where A.CustId = :PCustId;
+
+      #Rrn1 += 1;
+
+      If #Rrn1 >  9999;
+         Leave;
+      EndIf;
+
+      Write AccDltSfl1;
+   EndFor;
+
+End-Proc;
+
+//------------------------------------------------------------------------------------ //
+// Procedure Name: DisplayDltSfl                                                       //
+// Description   : Procedure to display delete subfile                                 //
+//------------------------------------------------------------------------------------ //
+
+Dcl-Proc DisplayDltSfl;
+   IndDltSflDsp    = *On;
+   IndDltSflDspCtl = *On;
+   IndDltSflEnd    = *On;
+
+   If #Rrn1 < 1;
+      IndDltSflDsp = *Off;
+   EndIf;
+
+   MngHdr = '        Delete Account Details        ';
+   MngFtrL2 = 'F12= Cancel';
+   Write MngHeader;
+   Write MngFooter;
+   Exfmt AccDltCtl1;
 End-Proc;

@@ -68,11 +68,11 @@ Dcl-Proc MngDsbrD Export;
             Clear SMngChoice;
 
          When SMngChoice = 4;
-            //TrHistorySubFile();
+            TrHistorySubFile();
             Clear SMngChoice;
 
          When SMngChoice = 5;
-            //LoanSubFile();
+            LoanSubFile();
             Clear SMngChoice;
 
          When SMngChoice = 6;

@@ -395,6 +395,14 @@ Dcl-Proc InsertRec;
       Insert Into AccPf(CustId, AccNo, AccType, AccStatus)
       Values(:S2CId, :PAccNo, :S2AccType, 'PENDING');
 
+   Exec Sql
+      Insert Into TrHstryPf(CACCNO)
+      Values(:PAccNo);
+
+   Exec Sql
+      Insert Into LoanPf(CUSTACCNO)
+      Values(:PAccNo);
+
    Clear MngCurdCst;
    Exec Sql
       Select Max(CId) Into :PCId From CustPf;
@@ -843,7 +851,7 @@ Dcl-Proc DisplayDltSfl;
       IndDltSflDsp = *Off;
    EndIf;
 
-   MngHdr = 'Delete Customer Details';
+   MngHdr = '        Delete Customer Details        ';
    MngFtrL2 = 'F12= Cancel';
    Write MngHeader;
    Write MngFooter;

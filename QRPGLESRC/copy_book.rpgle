@@ -27,3 +27,9 @@ End-Pr;
 
 Dcl-Pr CustAccSubFile;
 End-pr;
+
+Dcl-Pr TrHistorySubFile;
+End-Pr;
+
+Dcl-Pr LoanSubFile;
+End-Pr;

@@ -11,11 +11,21 @@
              CRTSQLRPGI OBJ(KARTIKCS/MNGCUSTM) +
                           SRCFILE(KARTIKCS/QRPGLESRC) SRCMBR(*OBJ) +
                           OBJTYPE(*MODULE) DBGVIEW(*SOURCE)
+             CRTSQLRPGI OBJ(KARTIKCS/MNGACCDTLM) +
+                          SRCFILE(KARTIKCS/QRPGLESRC) SRCMBR(*OBJ) +
+                          OBJTYPE(*MODULE) DBGVIEW(*SOURCE)
+             CRTSQLRPGI OBJ(KARTIKCS/MNGTRHISM) +
+                          SRCFILE(KARTIKCS/QRPGLESRC) SRCMBR(*OBJ) +
+                          OBJTYPE(*MODULE) DBGVIEW(*SOURCE)
+             CRTSQLRPGI OBJ(KARTIKCS/MNGLOANM) +
+                          SRCFILE(KARTIKCS/QRPGLESRC) SRCMBR(*OBJ) +
+                          OBJTYPE(*MODULE) DBGVIEW(*SOURCE)
              UPDSRVPGM  SRVPGM(KARTIKCS/LOGINSRV) +
                           MODULE(KARTIKCS/MNGRDSBM)
              UPDSRVPGM  SRVPGM(KARTIKCS/MANAGERSRV) +
                           MODULE(KARTIKCS/MNGRCRM KARTIKCS/MNGCUSTM +
-                          KARTIKCS/MNGACCDTLM)
+                          KARTIKCS/MNGACCDTLM KARTIKCS/MNGTRHISM +
+                          KARTIKCS/MNGLOANM) EXPORT(*CURRENT)
              UPDSRVPGM  SRVPGM(KARTIKCS/STATESRV) +
                           MODULE(KARTIKCS/STATECITYM)
              CRTBNDRPG  PGM(KARTIKCS/LOGINR) +
