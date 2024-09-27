@@ -102,14 +102,23 @@ Dcl-Proc LoginUsr;
 
       Select;
          When %Scan('MNG':S1UserID:1) = 1;
-            DefaultPsW = 'CTBMNG2024';
+            DefaultPsW = 'WELCOME';
             IF %Trim(S1USERPSWD) = DefaultPsW;
                FirstLogin();
             Else;
                MngDsbrd();
                Clear LogInMain;
             EndIF;
+            Return;
 
+         When %Scan('CR':S1UserId:1) = 1;
+            DefaultPsW = 'WELCOME';
+            If %Trim(S1UserPswd) = DefaultPsW;
+               FirstLogIn();
+            Else;
+               CrDshbrd(S1UserId);
+               Clear LoginMain;
+            EndIf;
             Return;
       EndSl;
 End-Proc;

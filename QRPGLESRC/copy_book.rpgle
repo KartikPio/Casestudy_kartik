@@ -33,3 +33,10 @@ End-Pr;
 
 Dcl-Pr LoanSubFile;
 End-Pr;
+
+Dcl-Pr ChangPswd;
+End-Pr;
+
+Dcl-Pr CrDshbrd;
+   UserId Char(10);
+End-Pr;

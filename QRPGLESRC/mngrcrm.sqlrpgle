@@ -15,11 +15,13 @@
 // Control Option
 Ctl-Opt Option(*Nodebugio : *Srcstmt) BndDir('KARTIKCS/STATEBND');
 Ctl-Opt NoMain;
+/Title  ('MNGRCRM - Module to manage the customer represetative details');
 
 // File Declaration
 Dcl-F MngDsbD WorkStn Indds(IndicatorDs) Sfile(CrSflM01 : #Rrn)
                                          Sfile(CrDltSflM1: #Rrn1);
 // Data Structure Declaration
+// Indicator data structure
 Dcl-Ds IndicatorDs;
    IndExit         Ind Pos(03);
    IndPrompt       Ind Pos(04);
@@ -51,6 +53,7 @@ Dcl-Ds IndicatorDs;
    IndFieldPR      Ind Pos(98)  Inz(*Off);
 End-Ds;
 
+// data sctructure to contail fields of screen
 Dcl-Ds CrDetails1;
    S2CrId       Char(10)  Inz;
    S2CrName     Char(20)  Inz;
@@ -85,7 +88,9 @@ Dcl-S S2CrId#      Char(10) Inz(*Blank);
 Dcl-S S2CrId1      Like(S2CrId);
 Dcl-S #CrId        Char(20) Inz(*Blank);
 Dcl-S ArrCrId      Char(20) Dim(9999);
+Dcl-S Stmt         Char(200)Inz(*Blank);
 Dcl-S Deleteflag   Ind      Inz(*Off);
+Dcl-C QT           Const('''');
 DCl-C CapsAlpha    Const('ABCDEFGHIJKLMNOPQRSTUVWXYZ ');
 Dcl-C Regex1       Const('^(?:\w+\.?)*\w+@(?:\w+\.)*\w+(?:\s+\.?)*$');
 Dcl-S GetTimeStamp TimeStamp;
@@ -101,6 +106,7 @@ Dcl-Proc CRSubFile Export;
       Exec Sql
          Set Option Commit = *None, DatFmt= *Iso;
 
+      // Select statement to control the flow of program
       Select;
          When IndExit = *On Or IndCancel = *On;
              IndCancel = *Off;
@@ -146,18 +152,26 @@ End-proc;
 //------------------------------------------------------------------------------------ //
 Dcl-Proc LoadSfl;
    IndOptPC = *On;
+   Clear Stmt;
+   Stmt = 'Select CrId, CrName, CrDoj, CrMob From CustRepPf';
+
+   // If condition to load the subfile according to position to filed
    If PositionTo <> *Blank;
-      Exec Sql
-         Declare PosCursor Cursor for
-         Select CrId, CrName, CrDoj, CrMob
-         From CustRepPf Where
-         CrId Like '%' Concat Trim(:PositionTo) Concat '%';
+      Stmt = %Trim(Stmt) + ' Where CrId Like ' + QT + '%' + %Trim(PositionTo) + '%' + QT +
+             'Or CrName Like ' + QT + '%' + %Trim(PositionTo) + '%' + QT;
+   EndIf;
+
+   Exec Sql
+      Prepare SqlStmt From :Stmt;
+
+   Exec Sql
+      Declare C01 Cursor for Sqlstmt;
+
+   Exec Sql
+      Open C01;
 
       Exec Sql
-         Open PosCursor;
-
-      Exec Sql
-         Fetch From PosCursor Into :S1CrId, :S1CrName, :S1CrDoj, :S1CRMob;
+         Fetch From C01 Into :S1CrId, :S1CrName, :S1CrDoj, :S1CRMob;
 
       Dow SqlCode = 0;
          #Rrn += 1;
@@ -169,40 +183,11 @@ Dcl-Proc LoadSfl;
          Write CRSflM01;
 
          Exec Sql
-            Fetch From PosCursor Into :S1CrId, :S1CrName, :S1CrDoj, :S1CRMob;
+            Fetch From C01 Into :S1CrId, :S1CrName, :S1CrDoj, :S1CRMob;
       EndDo;
 
       Exec Sql
-         Close PosCursor;
-
-   Else;
-      Exec Sql
-         Declare SflCursor Cursor for
-         Select CrId, CrName, CrDoj, CrMob From CustRepPf;
-
-      Exec Sql
-         Open SflCursor;
-
-      Exec Sql
-          Fetch From SflCursor Into :S1CrId, :S1CrName, :S1CrDoj, :S1CRMob;
-
-      Dow SqlCode = 0;
-
-         #Rrn += 1;
-
-         If #Rrn > 9999;
-            Leave;
-         EndIF;
-
-         Write CRSflM01;
-
-         Exec Sql
-            Fetch Next From SflCursor Into :S1CrId, :S1CrName, :S1CrDoj, :S1CRMob;
-
-      EndDo;
-      Exec Sql
-         Close SflCursor;
-      EndIf;
+         Close C01;
 End-Proc;
 
 //------------------------------------------------------------------------------------ //
@@ -219,7 +204,7 @@ Dcl-Proc DisplaySfl;
    EndIf;
 
    Clear PositionTo;
-   MngHdr   = 'Work With Customer Representative';
+   MngHdr   = '   Work With Customer Representative   ';
    MngFtrL2 = 'F3=Exit   F5=Refresh   F6=Add New Record   F12= Cancel';
    Write MngHeader;
    Write MngFooter;
@@ -235,6 +220,7 @@ Dcl-Proc InsertNewRec;
    MngFtrL2 = 'F3=Exit   F5=Refresh   F7=Confirm   F12=Cancel';
    Reset CrDetails1;
 
+   //Id Auto increment
    Exec Sql
       Select Max(CrId) Into :PCrId From CustRepPf;
 
@@ -259,6 +245,7 @@ Dcl-Proc InsertNewRec;
       Clear MngErrmsg;
       ResetInd();
 
+      // Select statement to control the flow of the program
       Select;
          When IndExit = *on Or IndCancel = *On;
             IndCancel = *Off;
@@ -322,6 +309,8 @@ Dcl-Proc InsertRec;
 
    Clear S2UpdTs;
    S2AddTs = %Timestamp();
+
+   // Select statement to get the value for gender
    Select;
       When S2CrGender = 'M';
          S2CrGender1  = 'Male';
@@ -343,6 +332,7 @@ Dcl-Proc InsertRec;
       Exec Sql
       Select Max(CrId) Into :PCrId From CustRepPf;
 
+      // Id auto increment
       CrIdSubfix = %Int(%Subst(PCrId : 3)) + 1;
       S2CrId     = 'CR' + %Editc(CrIdSubfix : 'X');
       MngErrMsg  = 'Record inserted successfully';
@@ -506,6 +496,7 @@ Dcl-Proc UpdateCr;
       Select * Into :CrDetails1
       From CustRepPF Where CrId = :S2CrId#;
 
+   // Select statement to get the value for gender
    Select;
       When S2CrGender1 = 'Male';
          S2CrGender    = 'M';
@@ -515,7 +506,7 @@ Dcl-Proc UpdateCr;
          S2CrGender    = 'O';
    EndSl;
 
-   MNGHDR   = 'Update Customer Representative Details';
+   MNGHDR   = ' Update Customer Representative Details ';
    MngFtrL2 = 'F3=Exit   F5=Refresh   F7=Confirm   F12=Cancel';
 
    Dow IndExit = *Off Or IndCancel = *Off;
@@ -532,6 +523,7 @@ Dcl-Proc UpdateCr;
       Clear MngErrMsg;
       ResetInd();
 
+      // Select statement to control the flow of the program
       Select;
          When IndExit = *on Or IndCancel = *On;
             IndCancel = *Off;
@@ -571,10 +563,16 @@ Dcl-Proc UpdateCr;
    EndDo;
 End-Proc;
 
+//------------------------------------------------------------------------------------ //
+// Procedure Name: UpdateRec                                                            //
+// Description   : Procedure to update customer representative details                 //
+//------------------------------------------------------------------------------------ //
 Dcl-Proc UpdateRec;
    Dcl-S HGender Char(6) Inz(*Blank);
 
    GetTimeStamp = %Timestamp();
+
+   // select statement to get the value for gender
    Select;
       When S2CrGender = 'M';
          S2CrGender1  = 'Male';
@@ -597,14 +595,18 @@ End-Proc;
 // Procedure Name: DisplayCr                                                           //
 // Description   : Procedure to display customer representative details                //
 //------------------------------------------------------------------------------------ //
-Dcl-Proc DisplayCr;
+Dcl-Proc DisplayCr Export;
+   Dcl-Pi DisplayCr;
+       UserId Char(10);
+   End-Pi;
    Clear S2CrId#;
    S2CrId# = S1CrId;
    Reset CrDetails1;
    Exec Sql
       Select * Into :CrDetails1
-      From CustRepPF Where CrId = :S2CrId#;
+      From CustRepPF Where CrId = :S2CrId# Or CrId = :UserId;
 
+   // Select statement to get the value for gender
    Select;
       When S2CrGender1 = 'Male';
          S2CrGender    = 'M';

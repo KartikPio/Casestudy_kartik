@@ -1,4 +1,4 @@
-     A*%%TS  SD  20240820  084628  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20240924  060123  KARTIK      REL-V7R5M0  5770-WDS
      A*%%EC
      A                                      DSPSIZ(24 80 *DS3)
      A                                      INDARA
@@ -85,7 +85,7 @@
      A  30                                  DSPATR(PR)
      A            S2PROMPT      11A  O 10 65COLOR(BLU)
      A          R FGTPSWSCR
-     A*%%TS  SD  20240820  084628  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20240924  060123  KARTIK      REL-V7R5M0  5770-WDS
      A                                      CA03(03 'Exit')
      A                                      CF07(07 'Confirm')
      A                                      CA12(12 'Cancel')
@@ -101,10 +101,13 @@
      A                                      DSPATR(HI)
      A            S3OLDPSWD     20A  B 10 42DSPATR(ND)
      A  23                                  DSPATR(PC)
+     A                                      CHECK(LC)
      A            S3NEWPSWD     20A  B 12 42DSPATR(ND)
      A  26                                  DSPATR(PC)
+     A                                      CHECK(LC)
      A            S3CNFMPSWD    20A  B 14 42DSPATR(ND)
      A  27                                  DSPATR(PC)
+     A                                      CHECK(LC)
      A            S3USERID      10A  B  8 42
      A  22                                  DSPATR(RI)
      A  22                                  DSPATR(PC)

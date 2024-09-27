@@ -29,9 +29,6 @@ End-Ds;
 //Copy Book Declaration
 /Copy KartikCS/Qrpglesrc,Copy_Book
 
-// Variable Declaration
-
-
 // Main Code
 
 // Call Manager Deshboard screen
@@ -43,7 +40,6 @@ Dcl-Proc MngDsbrD Export;
       Write MngFooter;
       Exfmt MngMainScr;
 
-      // Different operation on login screen
       Select;
          When IndExit = *On Or IndCancel = *On;
             IndCancel = *Off;
@@ -76,7 +72,7 @@ Dcl-Proc MngDsbrD Export;
             Clear SMngChoice;
 
          When SMngChoice = 6;
-            //ChangPswd();
+            ChangPswd();
             Clear SMngChoice;
 
          Other;

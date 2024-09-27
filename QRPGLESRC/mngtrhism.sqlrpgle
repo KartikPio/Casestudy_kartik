@@ -44,6 +44,8 @@ End-Ds;
 // Variable Declaration
 Dcl-S #Rrn  Zoned(4) Inz(*Zero);
 Dcl-S #Rrn1 Zoned(4) Inz(*Zero);
+Dcl-S Stmt  Char(200) Inz(*Blank);
+Dcl-C QT    Const('''');
 
 // Main Code
 Dcl-Proc TrHistorySubFile Export;
@@ -95,69 +97,43 @@ End-proc;
 //------------------------------------------------------------------------------------ //
 Dcl-Proc LoadSfl;
    IndOptPC = *On;
+   Clear Stmt;
+   Stmt = 'Select C.CId, C.CName, A.AccNO, A.AccBlnce ' +
+          'From CustPf C Join AccPf  A On C.CId = A.CustId';
+
    If S1Position <> *Blank;
-      Exec Sql
-         Declare PosCursor2 Cursor for
-         Select C.CId, C.CName, A.AccNO, A.AccBlnce
-         From CustPf C
-         Join AccPf  A
-         On C.CId = A.CustId
-         Where CId Like '%' Concat Trim(:S1Position) Concat '%';
-
-      Exec Sql
-         Open PosCursor2;
-
-      Exec Sql
-         Fetch from PosCursor2 Into :S1CId, :S1CName, :S1AccNo, :S1AccBlnce;
-
-       Dow SqlCode = 0;
-          #Rrn += 1;
-
-          If #Rrn > 9999;
-             Leave;
-          EndIF;
-
-          Write TrHisSfl01;
-
-         Exec Sql
-            Fetch from PosCursor2 Into :S1CId, :S1CName, :S1AccNo, :S1AccBlnce;
-
-       EndDo;
-
-       Exec Sql
-          Close PosCursor2;
-
-    Else;
-       Exec Sql
-          Declare SflCursor02 Cursor for
-          Select C.CId, C.CName, A.AccNO, A.AccBlnce
-          From CustPf C
-          Join AccPf  A
-          On C.CId = A.CustId;
-
-       Exec Sql
-          Open SflCursor02;
-
-       Exec Sql
-          Fetch From SflCursor02 Into :S1CId, :S1CName, :S1AccNo, :S1AccBlnce;
-
-      Dow SqlCode = 0;
-         #Rrn += 1;
-
-         If #Rrn > 9999;
-            Leave;
-         EndIF;
-
-         Write TrHisSfl01;
-
-         Exec Sql
-            Fetch From SflCursor02 Into :S1CId, :S1CName, :S1AccNo, :S1AccBlnce;
-      EndDo;
-
-      Exec Sql
-         Close SflCursor02;
-
+      Stmt = %Trim(Stmt) + ' Where C.CId Like ' + QT + '%' + %Trim(S1Position) + '%' + QT +
+             ' Or C.CName Like ' + QT + '%' + %Trim(S1Position) + '%' + QT;
    EndIf;
+
+   Exec Sql
+      Prepare SqlStmt From :Stmt;
+
+   Exec Sql
+      Declare C01 Cursor for Sqlstmt;
+
+   Exec Sql
+      Open C01;
+
+   Exec Sql
+      Fetch from C01 Into :S1CId, :S1CName, :S1AccNo, :S1AccBlnce;
+
+   Dow SqlCode = 0;
+      #Rrn += 1;
+
+      If #Rrn > 9999;
+         Leave;
+      EndIF;
+
+      Write TrHisSfl01;
+
+   Exec Sql
+      Fetch from C01 Into :S1CId, :S1CName, :S1AccNo, :S1AccBlnce;
+
+   EndDo;
+
+   Exec Sql
+      Close C01;
 End-Proc;
 
 //------------------------------------------------------------------------------------ //

@@ -59,6 +59,8 @@ Dcl-S Idx          Zoned(5) Inz(*Zero);
 Dcl-S Idx1         Zoned(5) Inz(1);
 Dcl-S PCustId      Char(10) Inz(*Zero);
 Dcl-S ArrCustId    Char(20) Dim(9999);
+Dcl-S Stmt         Char(200) Inz(*Blank);
+Dcl-C QT           Const('''');
 Dcl-S Deleteflag   Ind      Inz(*Off);
 Dcl-S #Rrn1                 Like(#Rrn);
 Dcl-C AlphaNum 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
@@ -114,20 +116,27 @@ End-proc;
 //------------------------------------------------------------------------------------ //
 Dcl-Proc LoadSfl;
    IndOptPC = *On;
+   Clear Stmt;
+   Stmt = 'Select A.CustId, A.AccType, A.AccStatus, C.CName ' +
+          'From Kartikcs/AccPf A Join Kartikcs/CustPf C On A.CustId = C.CId';
+
    If S1Position <> *Blank;
-      Exec Sql
-         Declare PosCursor1 Cursor for
-         Select A.CustId, A.AccType, A.AccStatus, C.CName
-         From Kartikcs/AccPf A
-         Join Kartikcs/CustPf C
-         On A.CustId = C.CId
-         Where CustId Like '%' Concat Trim(:S1Position) Concat '%';
+      Stmt = %Trim(Stmt) + ' Where A.CustId Like ' + QT + '%' + %Trim(S1Position) + '%' + QT +
+             ' Or C.CName Like ' + Qt + '%' + %Trim(S1Position) + '%' + QT +
+             ' Or A.AccStatus Like ' + QT + '%' + %Trim(S1Position) + '%' + QT;
+   EndIf;
+
+   Exec Sql
+      Prepare SqlStmt From :Stmt;
+
+   Exec Sql
+      Declare C01 Cursor for Sqlstmt;
 
       Exec Sql
-         Open PosCursor1;
+         Open C01;
 
       Exec Sql
-         Fetch from PosCursor1 Into :S1CustId, :S1AccType, :S1AccStats, :S1Cname2;
+         Fetch from C01 Into :S1CustId, :S1AccType, :S1AccStats, :S1Cname2;
 
       Dow SqlCode = 0;
          #Rrn += 1;
@@ -143,39 +152,7 @@ Dcl-Proc LoadSfl;
       EndDo;
 
       Exec Sql
-         Close PosCursor1;
-
-   Else;
-      Exec Sql
-         Declare SflCursor01 Cursor for
-         Select A.CustId, A.AccType, A.AccStatus, C.CName
-         From Kartikcs/AccPf A
-         Join Kartikcs/CustPf C
-         On A.CustId = C.CId;
-
-      Exec Sql
-         Open SflCursor01;
-
-      Exec Sql
-         Fetch From SflCursor01 Into :S1CustId, :S1AccType, :S1AccStats, :S1Cname2;
-
-      Dow SqlCode = 0;
-         #Rrn += 1;
-
-         If #Rrn > 9999;
-            Leave;
-         EndIF;
-
-         Write AccSfl01;
-
-         Exec Sql
-            Fetch From SflCursor01 Into :S1CustId, :S1AccType, :S1AccStats, :S1Cname2;
-      EndDo;
-
-      Exec Sql
-         Close SflCursor01;
-
-   EndIf;
+         Close C01;
 End-Proc;
 
 //------------------------------------------------------------------------------------ //

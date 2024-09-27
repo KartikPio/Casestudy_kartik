@@ -42,7 +42,7 @@ End-Ds;
 
 // Variable Declaration
 Dcl-S #Rrn  Zoned(4)  Inz(*Zero);
-Dcl-S Stmt  Char(100) Inz(*Blank);
+Dcl-S Stmt  Char(200) Inz(*Blank);
 Dcl-C QT    Const('''');
 
 // Main Code
@@ -69,7 +69,7 @@ Dcl-Proc LoanSubFile Export;
         When IndRefresh = *On;
             IndRefresh   = *Off;
             Clear MngErrMsg;
-            Clear S1Position;
+            Clear S1PosTo;
             Clear S1Option;
             IndOptRI = *Off;
             IndOptPC = *Off;
@@ -99,8 +99,9 @@ Dcl-Proc LoadSfl;
    Clear Stmt;
    Stmt = 'Select CustAccNo, LType, LAmnt, LStatus From LoanPf' ;
 
-   If S1Position <> *Blank;
-      Stmt = %Trim(Stmt) + ' Where CustAccNo Like ' + QT + '%' + %Trim(S1Position) + '%' + QT ;
+   If S1PosTo <> *Blank;
+      Stmt = %Trim(Stmt) + ' Where CustAccNo Like ' + QT + '%' + %Trim(S1PosTo) + '%' + QT +
+             ' Or LStatus Like ' + QT + '%' + %Trim(S1PosTo) + '%' + QT;
    EndIf;
 
    Exec Sql
@@ -145,7 +146,7 @@ Dcl-Proc DisplaySfl;
    If #Rrn < 1;
       IndSflDsp = *Off;
    EndIf;
-   Clear S1Position;
+   Clear S1PosTo;
    MngHdr   = '        Display Loan Details         ';
    MngFtrL2 = 'F3=Exit   F5=Refresh   F12=Cancel';
    Write MngHeader;
@@ -212,13 +213,16 @@ Dcl-Proc WrokWthLoan;
 
          When IndConfirm = *On;
             IndConfirm   = *Off;
+            If  S2LStatus  = 'APPROVED';
             LoanValidation();
+            EndIf;
             If MngErrMsg = *Blank;
                UpdateRec();
             EndIf;
-            LoanValidation();
          Other;
-
+            If  S2LStatus  = 'APPROVED';
+               LoanValidation();
+            EndIf;
       EndSl;
    EndDo;
 End-Proc;
@@ -338,7 +342,7 @@ Dcl-Proc  UpdateRec;
    Dcl-S IntRate   Zoned(5:2) Inz(*Zero);
    Dcl-S Time      Zoned(3)   Inz(*Zero);
 
-   If S2LStatus = 'DENY';
+   If S2LStatus = 'DENY' Or S2LStatus = 'PENDING';
       Exec Sql
          Update LoanPf Set LStatus = :S2LStatus
       Where CustAccNo = :S1CstAccNo;

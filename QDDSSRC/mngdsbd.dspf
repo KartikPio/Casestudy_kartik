@@ -1,4 +1,4 @@
-     A*%%TS  SD  20240920  092349  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20240924  113521  KARTIK      REL-V7R5M0  5770-WDS
      A*%%EC
      A                                      DSPSIZ(24 80 *DS3)
      A                                      INDARA
@@ -59,7 +59,9 @@
      A  26                                  DSPATR(PC)
      A                                      VALUES(2 4 5)
      A          R CRCTLM01                  SFLCTL(CRSFLM01)
-     A*%%TS  SD  20240830  062727  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20240924  111941  KARTIK      REL-V7R5M0  5770-WDS
+     A                                      SFLSIZ(9999)
+     A                                      SFLPAG(0010)
      A                                      CA03(03 'Exit')
      A                                      CA05(05 'Refresh')
      A                                      CF06(06 'NewRecord')
@@ -69,10 +71,8 @@
      A  22                                  SFLDSPCTL
      A  23                                  SFLCLR
      A  24                                  SFLEND(*MORE)
-     A                                      SFLSIZ(9999)
-     A                                      SFLPAG(0010)
-     A                                  4 45'Position to  . . . . .'
-     A            POSITIONTO    10A  B  4 70
+     A                                  4 27'Position to(Cr Id/Cr Name) . .'
+     A            POSITIONTO    20A  B  4 60
      A                                  6  3'Type options, press Enter.'
      A                                      COLOR(BLU)
      A                                  7  4'2=Edit   4=Delete   5=Display Deta-
@@ -259,7 +259,7 @@
      A            S1CPAN    R        O 10 54REFFLD(CUSTPFR/CPAN KARTIKCS/CUSTPF)
      A            S1CMOB    R        O 10 70REFFLD(CUSTPFR/CMOB KARTIKCS/CUSTPF)
      A          R CUSTCTLM01                SFLCTL(CUSTSFLM01)
-     A*%%TS  SD  20240912  030124  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20240924  111941  KARTIK      REL-V7R5M0  5770-WDS
      A                                      SFLSIZ(9999)
      A                                      SFLPAG(0010)
      A                                      CA03(03 'Exit')
@@ -271,8 +271,8 @@
      A  22                                  SFLDSPCTL
      A  23                                  SFLCLR
      A  24                                  SFLEND(*MORE)
-     A                                  4 45'Position to  . . . . .'
-     A            S1POSITION    10A  B  4 70
+     A                                  4 24'Position to(Customer Id/Name) . .'
+     A            S1POSITION    20A  B  4 60
      A                                  6  3'Type options, press Enter.        -
      A                                                                         -
      A                                                  2=Edit   4=Delete   5=D-
@@ -501,7 +501,7 @@
      A            S1CNAME2  R        O 10 25REFFLD(CUSTPFR/CNAME KARTIKCS/CUSTP-
      A                                      F)
      A          R ACCCTL01                  SFLCTL(ACCSFL01)
-     A*%%TS  SD  20240913  043620  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20240924  111941  KARTIK      REL-V7R5M0  5770-WDS
      A                                      SFLSIZ(9999)
      A                                      SFLPAG(0008)
      A                                      CA03(03 'Exit')
@@ -512,8 +512,9 @@
      A  22                                  SFLDSPCTL
      A  23                                  SFLCLR
      A  24                                  SFLEND(*MORE)
-     A                                  4 45'Position to  . . . . .'
-     A            S1POSITION    10A  B  4 70
+     A                                  4 19'Position to(Id/Name/Account Status-
+     A                                      ) . .'
+     A            S1POSITION    20A  B  4 60
      A                                  6  2'Type options, press Enter.'
      A                                      COLOR(BLU)
      A                                  7  3'2=Update account   4=Close account-
@@ -677,7 +678,7 @@
      A  26                                  DSPATR(PC)
      A                                      VALUES(5)
      A          R TRHISCTL01                SFLCTL(TRHISSFL01)
-     A*%%TS  SD  20240917  072023  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20240924  111941  KARTIK      REL-V7R5M0  5770-WDS
      A                                      SFLSIZ(9999)
      A                                      SFLPAG(0010)
      A                                      CA03(03 'Exit')
@@ -688,8 +689,8 @@
      A  22                                  SFLDSPCTL
      A  23                                  SFLCLR
      A  24                                  SFLEND(*MORE)
-     A            S1POSITION    10A  B  4 59
-     A                                  4 28'Position to(CustID/Name) . .'
+     A            S1POSITION    20A  B  4 60
+     A                                  4 29'Position to(CustID/Name) . .'
      A                                  6  2'Type options, press Enter.'
      A                                      COLOR(BLU)
      A                                  7  3'5=Display'
@@ -757,7 +758,7 @@
      A                                  8 70'Tr Type'
      A                                      DSPATR(HI)
      A          R LOANSFL01                 SFL
-     A*%%TS  SD  20240920  063251  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20240924  113521  KARTIK      REL-V7R5M0  5770-WDS
      A            S1CSTACCNOR        O 10 11REFFLD(LOANPFR/CUSTACCNO KARTIKCS/L-
      A                                      OANPF)
      A            S1LTYPE   R        O 10 28REFFLD(LOANPFR/LTYPE KARTIKCS/LOANP-
@@ -771,7 +772,7 @@
      A  26                                  DSPATR(PC)
      A                                      VALUES(2 5)
      A          R LOANCTL01                 SFLCTL(LOANSFL01)
-     A*%%TS  SD  20240920  064948  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20240924  113521  KARTIK      REL-V7R5M0  5770-WDS
      A                                      SFLSIZ(9999)
      A                                      SFLPAG(0008)
      A                                      CA03(03 'Exit')
@@ -782,8 +783,9 @@
      A  22                                  SFLDSPCTL
      A  23                                  SFLCLR
      A  23                                  SFLEND(*MORE)
-     A            S1POSITION    10A  B  4 54
-     A                                  4 19'Position to(AccNO./Loan status) :'
+     A            S1POSTO       11A  B  4 69
+     A                                  4 31'Position to(AccNO./Loan status) . -
+     A                                      .'
      A                                  6  2'Type options, press Enter.'
      A                                      COLOR(BLU)
      A                                  7  3'2=Approve/Deny loan request   5=Di-

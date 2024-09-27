@@ -85,18 +85,19 @@ End-DS;
 // Variable Declaration
 Dcl-S #Rrn         Zoned(4) Inz(*Zero);
 Dcl-S #Rrn1        Like(#Rrn);
-Dcl-S PCId         Char(10) Inz(*Blank);
 Dcl-S CIdSubfix    Zoned(6) Inz(*Zero);
-Dcl-S GetState     Char(15) Inz(*Blank);
 Dcl-S Cnt          Zoned(5) Inz(*Zero);
-Dcl-S S2CId1       Like(S2CId);
 Dcl-S Idx          Zoned(5) Inz(*Zero);
 Dcl-S Idx1         Zoned(4) Inz(1);
+Dcl-S PCId         Char(10) Inz(*Blank);
+Dcl-S S2CId1       Like(S2CId);
+Dcl-S Stmt         Char(200)Inz(*Blank);
+Dcl-S GetState     Char(15) Inz(*Blank);
 Dcl-S ArrCId       Char(20) Dim(9999);
 Dcl-S Deleteflag   Ind      Inz(*Off);
+Dcl-C QT           Const('''');
 DCl-C CapsAlpha    Const('ABCDEFGHIJKLMNOPQRSTUVWXYZ ');
 Dcl-C Regex1       Const('^(?:\w+\.?)*\w+@(?:\w+\.)*\w+(?:\s+\.?)*$');
-//Dcl-S #Rrn1        Zoned(4) Inz(*Zero);
 
 // Main Code
 Dcl-Proc CustomerSubFile Export;
@@ -153,63 +154,41 @@ End-proc;
 //------------------------------------------------------------------------------------ //
 Dcl-Proc LoadSfl;
    IndOptPC = *On;
+   Clear Stmt;
+   Stmt = 'Select CId, CName, CPan, CMob From CustPF';
+
    If S1Position <> *Blank;
-      Exec Sql
-         Declare PosCursor Cursor for
-         Select CId, CName, CPan, CMob
-         From CustPF Where
-         CId Like '%' Concat Trim(:S1Position) Concat '%';
-
-      Exec Sql
-         Open PosCursor;
-
-      Exec Sql
-         Fetch From PosCursor Into :S1Cid, :S1Cname, :S1CPan, :S1CMob;
-
-      Dow SqlCode = 0;
-         #Rrn += 1;
-
-         If #Rrn > 9999;
-            Leave;
-         EndIF;
-
-         Write CustSflM01;
-
-         Exec Sql
-            Fetch From PosCursor Into :S1Cid, :S1Cname, :S1CPan, :S1CMob;
-         EndDo;
-
-         Exec Sql
-            Close PosCursor;
-
-   Else;
-      Exec Sql
-         Declare SflCursor Cursor for
-         Select CId, CName, CPan, CMob From CustPF;
-
-      Exec Sql
-         Open SflCursor;
-
-      Exec Sql
-         Fetch From SflCursor Into :S1Cid, :S1Cname, :S1CPan, :S1CMob;
-
-      Dow SqlCode = 0;
-
-         #Rrn += 1;
-
-         If #Rrn > 9999;
-            Leave;
-         EndIF;
-
-         Write CustSflM01;
-
-         Exec Sql
-            Fetch From SflCursor Into :S1Cid, :S1Cname, :S1CPan, :S1CMob;
-
-      EndDo;
-      Exec Sql
-         Close SflCursor;
+      Stmt = %Trim(Stmt) + ' Where CId Like ' + QT + '%' + %Trim(S1Position) + '%' + QT +
+             ' Or CName Like ' + QT + '%' + %Trim(S1Position) + '%' + QT;
    EndIf;
+
+   Exec Sql
+      Prepare SqlStmt From :Stmt;
+
+   Exec Sql
+      Declare C01 Cursor for Sqlstmt;
+
+   Exec Sql
+      Open C01;
+
+   Exec Sql
+      Fetch From C01 Into :S1Cid, :S1Cname, :S1CPan, :S1CMob;
+
+   Dow SqlCode = 0;
+      #Rrn += 1;
+
+      If #Rrn > 9999;
+         Leave;
+      EndIF;
+
+      Write CustSflM01;
+
+      Exec Sql
+         Fetch From C01 Into :S1Cid, :S1Cname, :S1CPan, :S1CMob;
+   EndDo;
+
+   Exec Sql
+      Close C01;
 End-Proc;
 
 //------------------------------------------------------------------------------------ //
