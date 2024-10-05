@@ -13,6 +13,7 @@
 // ------------------------------------------------------------------------------- //
 
 // Control Option
+/Title MngAccDtlm - Module to manage the customer bank accounts details
 Ctl-Opt Option(*Nodebugio : *Srcstmt) NOMain;
 
 // File Declaration
@@ -57,7 +58,7 @@ End-Ds;
 Dcl-S #Rrn         Zoned(4) Inz(*Zero);
 Dcl-S Idx          Zoned(5) Inz(*Zero);
 Dcl-S Idx1         Zoned(5) Inz(1);
-Dcl-S PCustId      Char(10) Inz(*Zero);
+Dcl-S PCustId      Char(10) Inz(*Blank);
 Dcl-S ArrCustId    Char(20) Dim(9999);
 Dcl-S Stmt         Char(200) Inz(*Blank);
 Dcl-C QT           Const('''');
@@ -148,7 +149,7 @@ Dcl-Proc LoadSfl;
          Write AccSfl01;
 
          Exec Sql
-            Fetch From PosCursor1 Into :S1CustId, :S1AccType, :S1AccStats, :S1Cname2;
+            Fetch From C01 Into :S1CustId, :S1AccType, :S1AccStats, :S1Cname2;
       EndDo;
 
       Exec Sql
@@ -332,7 +333,7 @@ Dcl-Proc GetAccStatus;
                S2AccStats  = 'APPROVED';
                Clear W2ErrorMsg;
              When W2Choice = '3';
-               S2AccStats  = 'Deny';
+               S2AccStats  = 'DENY';
                Clear W2ErrorMsg;
             Other;
               IndChoiceRI = *On;

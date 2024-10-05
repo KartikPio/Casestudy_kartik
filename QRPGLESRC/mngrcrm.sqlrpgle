@@ -96,7 +96,10 @@ Dcl-C Regex1       Const('^(?:\w+\.?)*\w+@(?:\w+\.)*\w+(?:\s+\.?)*$');
 Dcl-S GetTimeStamp TimeStamp;
 
 // Main Code
-Dcl-Proc CRSubFile Export;
+Dcl-Proc CrSubFile Export;
+   Dcl-Pi CrSubFile;
+       P_UserId Char(10);
+   End-Pi;
    IndExit = *Off;
    Dow IndExit = *Off;
       ClearSfl();
@@ -129,7 +132,7 @@ Dcl-Proc CRSubFile Export;
             Clear MngErrMsg;
             InsertNewRec();
          Other;
-            OtherOption();
+            OtherOption(P_UserId);
 
       EndSl;
    EndDo;
@@ -462,6 +465,9 @@ End-Proc;
 // Description   : Procedure to read sfl for other crud operation                      //
 //------------------------------------------------------------------------------------ //
 Dcl-Proc OtherOption;
+   Dcl-Pi OtherOption;
+       P_UserId Char(10);
+   End-Pi;
    ReadC CrSflm01;
    DoW S1Option <> 0;
       Select;
@@ -472,7 +478,7 @@ Dcl-Proc OtherOption;
             Idx1 += 1;
             Deleteflag = *On;
          When S1Option = 5;
-            DisplayCr();
+            DisplayCr(P_UserId);
          Other;
             Clear S1Option;
       EndSl;
@@ -597,14 +603,14 @@ End-Proc;
 //------------------------------------------------------------------------------------ //
 Dcl-Proc DisplayCr Export;
    Dcl-Pi DisplayCr;
-       UserId Char(10);
+       P_UserId Char(10);
    End-Pi;
    Clear S2CrId#;
    S2CrId# = S1CrId;
    Reset CrDetails1;
    Exec Sql
       Select * Into :CrDetails1
-      From CustRepPF Where CrId = :S2CrId# Or CrId = :UserId;
+      From CustRepPF Where CrId = :S2CrId# Or CrId = :P_UserId;
 
    // Select statement to get the value for gender
    Select;

@@ -12,7 +12,7 @@
      ** -------------------------------------------------------------------------------
 
      ** Control Option
-     HOption(*Nodebugio : *SrcStmt)
+     HOption(*Nodebugio : *SrcStmt) Bnddir('KARTIKCS/CUSTREPBND')
      HNomain
 
      ** File declaration
@@ -30,7 +30,7 @@
 // Main Code
 Dcl-Proc CrDshbrd Export;
    Dcl-Pi CrDshbrd;
-      UserId Char(10);
+      P_UserId Char(10);
    End-Pi;
 
    Dow IndExit = *Off or IndCancel = *Off;
@@ -47,31 +47,31 @@ Dcl-Proc CrDshbrd Export;
             Clear SCrChoice;
             Leave;
          When SCrChoice = 1;
-            DisplayCr(UserId);
+            DisplayCr(P_UserId);
             Clear SCrChoice;
 
         When SCrChoice = 2;
-           //CustomerSubFile();
+           CustomerSubFile();
            Clear SCrChoice;
 
         When SCrChoice = 3;
-           //CustAccSubFile();
+           CustAccSubFile();
            Clear SCrChoice;
 
         When SCrChoice = 4;
-           //Transaction();
+           Transaction();
            Clear SCrChoice;
 
         When SCrChoice = 5;
-           //TrHistorySubFile();
+           TrHistorySubFile();
            Clear SCrChoice;
 
         When SCrChoice = 6;
-           //ApplyLoan();
+           ApplyLoan();
            Clear SCrChoice;
 
          When SCrChoice = 7;
-            //ChangPswd();
+            ChangPswd();
             Clear SCrChoice;
 
          Other;

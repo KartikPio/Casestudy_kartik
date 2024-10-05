@@ -1,0 +1,7 @@
+                R JOINACCLFR                JFILE(CUSTPF ACCPF)
+     A          J                           JOIN(1 2)
+     A                                      JFLD(CID CUSTID)
+     A            CNAME
+     A            ACCNO
+     A            ACCTYPE
+     A            ACCBLNCE

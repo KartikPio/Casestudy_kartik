@@ -33,6 +33,9 @@ End-Ds;
 
 // Call Manager Deshboard screen
 Dcl-Proc MngDsbrD Export;
+   Dcl-Pi MngDsbrD;
+       P_UserId Char(10);
+   End-Pi;
    Dow IndExit = *Off Or IndCancel = *Off;
       MngHdr   = '           Manager Main Manu            ';
       MNGFTRL2 = 'F3=Exit   F5=Refresh   F12=Cancel';
@@ -52,7 +55,7 @@ Dcl-Proc MngDsbrD Export;
             Clear SMngChoice;
 
          When SMngChoice = 1;
-            CRSubFile();
+            CRSubFile(P_UserID);
             Clear SMngChoice;
 
          When SMngChoice = 2;

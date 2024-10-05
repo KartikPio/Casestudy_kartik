@@ -13,12 +13,13 @@
 // ------------------------------------------------------------------------------- //
 
 // Control Option
+/Title MngCustM - Module to manage the customer details
 Ctl-Opt Option(*Nodebugio : *Srcstmt) BndDir('KARTIKCS/STATEBND');
 Ctl-Opt NoMain;
 
 // File Declaration
-Dcl-F MngDsbD WorkStn Indds(IndicatorDs) Sfile(CUSTSflM01 : #Rrn)
-                                         Sfile(CustDltSfl : #Rrn1);
+Dcl-F MngDsbD WorkStn Indds(IndicatorDs) Sfile(CUSTSflM01 : #Rrn);
+
 // Data Sturcture Declaration
 Dcl-Ds IndicatorDs;
    IndExit         Ind Pos(03);
@@ -50,10 +51,6 @@ Dcl-Ds IndicatorDs;
    IndNmnAdharRI   Ind Pos(54);
    IndAccTypeRI    Ind Pos(46);
    IndChoiceRI     Ind Pos(47);
-   IndDltSflDsp    Ind Pos(42);
-   IndDltSflDspCtl Ind Pos(43);
-   IndDltSlfClr    Ind Pos(44);
-   IndDltSflEnd    Ind Pos(45);
    IndFieldPR      Ind Pos(98);
 End-Ds;
 
@@ -84,17 +81,12 @@ End-DS;
 
 // Variable Declaration
 Dcl-S #Rrn         Zoned(4) Inz(*Zero);
-Dcl-S #Rrn1        Like(#Rrn);
 Dcl-S CIdSubfix    Zoned(6) Inz(*Zero);
 Dcl-S Cnt          Zoned(5) Inz(*Zero);
-Dcl-S Idx          Zoned(5) Inz(*Zero);
-Dcl-S Idx1         Zoned(4) Inz(1);
 Dcl-S PCId         Char(10) Inz(*Blank);
 Dcl-S S2CId1       Like(S2CId);
 Dcl-S Stmt         Char(200)Inz(*Blank);
 Dcl-S GetState     Char(15) Inz(*Blank);
-Dcl-S ArrCId       Char(20) Dim(9999);
-Dcl-S Deleteflag   Ind      Inz(*Off);
 Dcl-C QT           Const('''');
 DCl-C CapsAlpha    Const('ABCDEFGHIJKLMNOPQRSTUVWXYZ ');
 Dcl-C Regex1       Const('^(?:\w+\.?)*\w+@(?:\w+\.)*\w+(?:\s+\.?)*$');
@@ -374,14 +366,6 @@ Dcl-Proc InsertRec;
       Insert Into AccPf(CustId, AccNo, AccType, AccStatus)
       Values(:S2CId, :PAccNo, :S2AccType, 'PENDING');
 
-   Exec Sql
-      Insert Into TrHstryPf(CACCNO)
-      Values(:PAccNo);
-
-   Exec Sql
-      Insert Into LoanPf(CUSTACCNO)
-      Values(:PAccNo);
-
    Clear MngCurdCst;
    Exec Sql
       Select Max(CId) Into :PCId From CustPf;
@@ -584,10 +568,6 @@ Dcl-Proc OtherOption;
       Select;
          When S1Option   = 2;
             UpdateCust();
-         When S1Option   = 4;
-            ArrCId(Idx1) = S1CId;
-            Idx1 += 1;
-            DeleteFlag   =  *On;
          When S1Option   = 5;
             DisplayCust();
          Other;
@@ -596,9 +576,6 @@ Dcl-Proc OtherOption;
       Clear S1Option;
       ReadC CustSflM01;
    EndDo;
-   If DeleteFlag = *On;
-      DeleteCust();
-   EndIf;
 End-Proc;
 
 //------------------------------------------------------------------------------------ //
@@ -736,103 +713,4 @@ Dcl-Proc DisplayCust;
          Leave;
       EndIf;
    EndDo;
-End-Proc;
-
-//------------------------------------------------------------------------------------ //
-// Procedure Name: DeleteCust                                                           //
-// Description   : Procedure to delete customer details                                //
-//------------------------------------------------------------------------------------ //
-Dcl-Proc DeleteCust;
-  Dow IndCancel = *Off;
-     ClearDltSfl();
-     LoadDltSfl();
-     DisplayDltSfl();
-
-     If IndCancel = *On;
-        IndCancel = *Off;
-        Reset Idx;
-        Reset Idx1;
-        Reset S2CId1;
-        Clear ArrCId;
-        DeleteFlag = *Off;
-        Clear S1Option;
-        Leave;
-     Else;
-     For Idx   = 1 to Idx1-1;
-         S2CId1 = ArrCId(Idx);
-         Exec Sql
-            Delete From CustPf
-            Where CId = :S2CId1;
-
-         Exec Sql
-            Delete From LoginPf
-            Where UserId = :S2CId1;
-      EndFor;
-      MngErrMsg = 'Data deleted succuessfully';
-       Deleteflag = *Off;
-        Reset Idx;
-        Reset Idx1;
-        Reset S2CId1;
-        Clear ArrCId;
-        Deleteflag = *Off;
-        Clear S1Option;
-       Leave;
-     EndIf;
-  EndDo;
-End-Proc;
-
-//------------------------------------------------------------------------------------ //
-// Procedure Name: ClearDltSfl                                                         //
-// Description   : Procedure to Clear delete subfile                                   //
-//------------------------------------------------------------------------------------ //
-Dcl-Proc ClearDltSfl;
-   IndDltSlfClr = *On;
-   #Rrn1        = 0;
-   Write CustDltCtl;
-   IndDltSlfClr = *Off;
-End-Proc;
-
-//------------------------------------------------------------------------------------ //
-// Procedure Name: LoadDltSfl                                                         //
-// Description   : Procedure to load delete subfile                                   //
-//------------------------------------------------------------------------------------//
-Dcl-Proc LoadDltSfl;
-   For Idx =1 to Idx1-1;
-      S2CId1 = ArrCId(Idx);
-      Exec Sql
-         Select CId, CName, CPan, CMob
-         Into :S3CId, :S3CName, :S3CPan, :S3CMob
-         From CustPf
-         Where CId = :S2CId1;
-      #Rrn1 += 1;
-
-      If #Rrn1 > 9999;
-         Leave;
-      EndIf;
-
-      Write CustDltSfl;
-
-   EndFor;
-
-End-Proc;
-
-//------------------------------------------------------------------------------------ //
-// Procedure Name: DisplayDltSfl                                                       //
-// Description   : Procedure to display delete subfile                                 //
-//------------------------------------------------------------------------------------ //
-
-Dcl-Proc DisplayDltSfl;
-   IndDltSflDsp    = *On;
-   IndDltSflDspCtl = *On;
-   IndDltSflEnd    = *On;
-
-   If #Rrn1 < 1;
-      IndDltSflDsp = *Off;
-   EndIf;
-
-   MngHdr = '        Delete Customer Details        ';
-   MngFtrL2 = 'F12= Cancel';
-   Write MngHeader;
-   Write MngFooter;
-   Exfmt CustDltCtl;
 End-Proc;

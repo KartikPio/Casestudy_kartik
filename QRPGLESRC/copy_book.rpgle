@@ -13,9 +13,11 @@
 // ------------------------------------------------------------------------------- //
 
 Dcl-Pr MngDsbrd;
+   P_UserId Char(10);
 End-Pr;
 
 Dcl-Pr  CRSubFile;
+   P_UserId Char(10);
 End-Pr;
 
 Dcl-Pr StateCityPrmpt Char(15);
@@ -38,5 +40,15 @@ Dcl-Pr ChangPswd;
 End-Pr;
 
 Dcl-Pr CrDshbrd;
-   UserId Char(10);
+   P_UserId Char(10);
+End-Pr;
+
+Dcl-Pr DisplayCr;
+   P_UserId Char(10);
+End-Pr;
+
+Dcl-Pr Transaction;
+End-Pr;
+
+Dcl-Pr ApplyLoan
 End-Pr;

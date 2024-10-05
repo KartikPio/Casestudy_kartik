@@ -1,0 +1,6 @@
+                R JOINVLDLFR                JFILE(ACCPF CUSTPF)
+     A          J                           JOIN(ACCPF CUSTPF)
+     A                                      JFLD(CUSTID CID)
+     A            CNAME
+     A            ACCNO
+     A          K ACCNO

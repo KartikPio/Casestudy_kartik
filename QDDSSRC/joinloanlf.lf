@@ -1,0 +1,10 @@
+                R JOINLOANR                 JFILE(CUSTPF ACCPF LOANPF)
+     A          J                           JOIN(CUSTPF ACCPF)
+     A                                      JFLD(CID CUSTID)
+     A          J                           JOIN(ACCPF LOANPF)
+     A                                      JFLD(ACCNO CUSTACCNO)
+     A            ACCNO
+     A            CNAME
+     A            LTYPE
+     A            LAMNT
+     A            LSTATUS

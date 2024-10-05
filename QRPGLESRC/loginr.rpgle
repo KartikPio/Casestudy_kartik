@@ -106,7 +106,7 @@ Dcl-Proc LoginUsr;
             IF %Trim(S1USERPSWD) = DefaultPsW;
                FirstLogin();
             Else;
-               MngDsbrd();
+               MngDsbrd(S1UserID);
                Clear LogInMain;
             EndIF;
             Return;

@@ -1,4 +1,4 @@
-     A*%%TS  SD  20240924  113521  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20241004  062133  KARTIK      REL-V7R5M0  5770-WDS
      A*%%EC
      A                                      DSPSIZ(24 80 *DS3)
      A                                      INDARA
@@ -259,7 +259,7 @@
      A            S1CPAN    R        O 10 54REFFLD(CUSTPFR/CPAN KARTIKCS/CUSTPF)
      A            S1CMOB    R        O 10 70REFFLD(CUSTPFR/CMOB KARTIKCS/CUSTPF)
      A          R CUSTCTLM01                SFLCTL(CUSTSFLM01)
-     A*%%TS  SD  20240924  111941  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20240930  100449  KARTIK      REL-V7R5M0  5770-WDS
      A                                      SFLSIZ(9999)
      A                                      SFLPAG(0010)
      A                                      CA03(03 'Exit')
@@ -275,8 +275,8 @@
      A            S1POSITION    20A  B  4 60
      A                                  6  3'Type options, press Enter.        -
      A                                                                         -
-     A                                                  2=Edit   4=Delete   5=D-
-     A                                      isplay Details'
+     A                                                  2=Edit   5=Display Deta-
+     A                                      ils           '
      A                                      COLOR(BLU)
      A                                  9  3'Opt'
      A                                      DSPATR(HI)
@@ -457,36 +457,6 @@
      A                                  5 69'(F4=Prompt)'
      A                                      COLOR(BLU)
      A  98                                  DSPATR(ND)
-     A          R CUSTDLTSFL                SFL
-     A*%%TS  SD  20240911  113803  KARTIK      REL-V7R5M0  5770-WDS
-     A            S3CID     R        O 10  2REFFLD(CUSTPFR/CID KARTIKCS/CUSTPF)
-     A            S3CNAME   R        O 10 20REFFLD(CUSTPFR/CNAME KARTIKCS/CUSTP-
-     A                                      F)
-     A            S3CPAN    R        O 10 48REFFLD(CUSTPFR/CPAN KARTIKCS/CUSTPF)
-     A            S3CMOB    R        O 10 67REFFLD(CUSTPFR/CMOB KARTIKCS/CUSTPF)
-     A          R CUSTDLTCTL                SFLCTL(CUSTDLTSFL)
-     A*%%TS  SD  20240911  090626  KARTIK      REL-V7R5M0  5770-WDS
-     A                                      CA12(12 'Cancel')
-     A                                      OVERLAY
-     A  42                                  SFLDSP
-     A  43                                  SFLDSPCTL
-     A  44                                  SFLCLR
-     A  45                                  SFLEND(*MORE)
-     A                                      SFLSIZ(9999)
-     A                                      SFLPAG(0008)
-     A                                  6  2'Press Enter to confirm your choice-
-     A                                      s for Delete.                      -
-     A                                                 Press F12=Cancel to retu-
-     A                                      rn to change your choices.'
-     A                                      COLOR(BLU)
-     A                                  9  2'Customer ID'
-     A                                      DSPATR(HI)
-     A                                  9 20'Customer Name'
-     A                                      DSPATR(HI)
-     A                                  9 48'Pan Number'
-     A                                      DSPATR(HI)
-     A                                  9 67'Contact No.'
-     A                                      DSPATR(HI)
      A          R ACCSFL01                  SFL
      A*%%TS  SD  20240920  063251  KARTIK      REL-V7R5M0  5770-WDS
      A            S1OPTION       1Y 0B 10  4EDTCDE(4)
@@ -666,9 +636,10 @@
      A                                  9 64'Account Status'
      A                                      DSPATR(HI)
      A          R TRHISSFL01                SFL
-     A*%%TS  SD  20240920  063251  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20241004  053942  KARTIK      REL-V7R5M0  5770-WDS
      A            S1ACCBLNCER        O 10 64REFFLD(ACCPFR/ACCBLNCE KARTIKCS/ACC-
      A                                      PF)
+     A                                      EDTCDE(Z)
      A            S1ACCNO   R        O 10 48REFFLD(ACCPFR/ACCNO KARTIKCS/ACCPF)
      A            S1CNAME   R        O 10 24REFFLD(CUSTPFR/CNAME KARTIKCS/CUSTP-
      A                                      F)
@@ -678,7 +649,7 @@
      A  26                                  DSPATR(PC)
      A                                      VALUES(5)
      A          R TRHISCTL01                SFLCTL(TRHISSFL01)
-     A*%%TS  SD  20240924  111941  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20241004  053942  KARTIK      REL-V7R5M0  5770-WDS
      A                                      SFLSIZ(9999)
      A                                      SFLPAG(0010)
      A                                      CA03(03 'Exit')
@@ -699,14 +670,14 @@
      A                                      DSPATR(HI)
      A                                  9  9'Customer Id'
      A                                      DSPATR(HI)
-     A                                  9 27'Customer Name'
+     A                                  9 24'Customer Name'
      A                                      DSPATR(HI)
      A                                  9 46'Account Number'
      A                                      DSPATR(HI)
-     A                                  9 68'Amount'
+     A                                  9 73'Amount'
      A                                      DSPATR(HI)
      A          R TRHISSLF02                SFL
-     A*%%TS  SD  20240919  014943  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20241004  053942  KARTIK      REL-V7R5M0  5770-WDS
      A            S4TRID    R        O  9  3REFFLD(TRHSTRYPFR/TRID KARTIKCS/TRH-
      A                                      STRYPF)
      A            S4TOACCNO R        O  9 20REFFLD(TRHSTRYPFR/TOACCNO KARTIKCS/-
@@ -715,6 +686,7 @@
      A                                      S/TRHSTRYPF)
      A            S4TRAMOUNTR        O  9 50REFFLD(TRHSTRYPFR/TRAMOUNT KARTIKCS-
      A                                      /TRHSTRYPF)
+     A                                      EDTCDE(Z)
      A            S4TRTYPE  R        O  9 69REFFLD(TRHSTRYPFR/TRTYPE KARTIKCS/T-
      A                                      RHSTRYPF)
      A            TRSTATUS01    10A  O 10  3DSPATR(HI)
@@ -727,7 +699,7 @@
      A            S4TRTIME  R        O 10 70REFFLD(TRHSTRYPFR/TRTIME KARTIKCS/T-
      A                                      RHSTRYPF)
      A          R TRHISCTL02                SFLCTL(TRHISSLF02)
-     A*%%TS  SD  20240919  011507  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20241004  062133  KARTIK      REL-V7R5M0  5770-WDS
      A                                      CF09(09 'Statement')
      A                                      CA12(12 'Cancel')
      A  46                                  OVERLAY
@@ -753,18 +725,19 @@
      A                                      DSPATR(HI)
      A                                  8 35'Tr From Acc'
      A                                      DSPATR(HI)
-     A                                  8 53'Tr Amount'
+     A                                  8 56'Tr Amount'
      A                                      DSPATR(HI)
-     A                                  8 70'Tr Type'
+     A                                  8 69'Tr Type'
      A                                      DSPATR(HI)
      A          R LOANSFL01                 SFL
-     A*%%TS  SD  20240924  113521  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20241004  053942  KARTIK      REL-V7R5M0  5770-WDS
      A            S1CSTACCNOR        O 10 11REFFLD(LOANPFR/CUSTACCNO KARTIKCS/L-
      A                                      OANPF)
      A            S1LTYPE   R        O 10 28REFFLD(LOANPFR/LTYPE KARTIKCS/LOANP-
      A                                      F)
      A            S1LAMNT   R        O 10 49REFFLD(LOANPFR/LAMNT KARTIKCS/LOANP-
      A                                      F)
+     A                                      EDTCDE(Z)
      A            S1LSTATUS R        O 10 70REFFLD(LOANPFR/LSTATUS KARTIKCS/LOA-
      A                                      NPF)
      A            S1OPTION       1Y 0B 10  4EDTCDE(4)
@@ -772,7 +745,7 @@
      A  26                                  DSPATR(PC)
      A                                      VALUES(2 5)
      A          R LOANCTL01                 SFLCTL(LOANSFL01)
-     A*%%TS  SD  20240924  113521  KARTIK      REL-V7R5M0  5770-WDS
+     A*%%TS  SD  20241004  053942  KARTIK      REL-V7R5M0  5770-WDS
      A                                      SFLSIZ(9999)
      A                                      SFLPAG(0008)
      A                                      CA03(03 'Exit')
@@ -797,7 +770,7 @@
      A                                      DSPATR(HI)
      A                                  9 31'Loan Type'
      A                                      DSPATR(HI)
-     A                                  9 51'Loan Amount'
+     A                                  9 53'Loan Amount'
      A                                      DSPATR(HI)
      A                                  9 69'Loan status'
      A                                      DSPATR(HI)
